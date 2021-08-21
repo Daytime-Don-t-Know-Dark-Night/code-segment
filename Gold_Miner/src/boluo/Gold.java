@@ -14,3 +14,24 @@ public class Gold extends Object {
 		this.img = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/gold1.gif");
 	}
 }
+
+
+class GoldMini extends Gold {
+
+	GoldMini() {
+		this.width = 36;
+		this.height = 36;
+		this.m = 15;
+		this.img = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/gold0.gif");
+	}
+}
+
+class GoldPlus extends Gold {
+	GoldPlus() {
+		this.x = (int) (Math.random() * 650);
+		this.width = 105;
+		this.height = 105;
+		this.m = 60;
+		this.img = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/gold2.gif");
+	}
+}

@@ -17,8 +17,16 @@ public class GameWin extends JFrame {
 	// Gold gold = new Gold();
 
 	{
-		for (int i = 0; i < 3; i++) {
-			objectList.add(new Gold());
+		for (int i = 0; i < 11; i++) {
+			double random = Math.random();
+			if (random < 0.3) {
+				objectList.add(new GoldMini());
+			} else if (random < 0.7) {
+				objectList.add(new Gold());
+			} else {
+				objectList.add(new GoldPlus());
+			}
+
 		}
 		for (int i = 0; i < 3; i++) {
 			objectList.add(new Rock());
