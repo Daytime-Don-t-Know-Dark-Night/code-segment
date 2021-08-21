@@ -94,6 +94,7 @@ public class Line {
 
 			break;
 		case 3:
+			int m = 1;
 			if (length > 100) {
 
 				length = length - 10;
@@ -102,6 +103,7 @@ public class Line {
 
 					// 只移动抓取到的金块
 					if (obj.flag) {
+						m = obj.m;
 						obj.x = endx - obj.getWidth() / 2;
 						obj.y = endy;
 
@@ -116,6 +118,11 @@ public class Line {
 
 				}
 
+			}
+			try {
+				Thread.sleep(m);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 			break;
 		}

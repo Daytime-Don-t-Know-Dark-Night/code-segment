@@ -10,6 +10,7 @@ public class Gold extends Object {
 		this.width = 52;
 		this.height = 52;
 		this.flag = false;
+		this.m = 30;
 		this.img = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/gold1.gif");
 	}
 }
