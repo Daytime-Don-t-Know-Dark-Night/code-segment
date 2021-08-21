@@ -102,7 +102,7 @@ public class Line {
 
 					// 只移动抓取到的金块
 					if (obj.flag) {
-						obj.x = endx - 26;
+						obj.x = endx - obj.getWidth() / 2;
 						obj.y = endy;
 
 						// 抓取成功, 移除金块

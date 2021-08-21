@@ -20,6 +20,9 @@ public class GameWin extends JFrame {
 		for (int i = 0; i < 3; i++) {
 			objectList.add(new Gold());
 		}
+		for (int i = 0; i < 3; i++) {
+			objectList.add(new Rock());
+		}
 	}
 
 	// 利用双缓存技术解决窗口闪动问题, 这是一块新的画布
