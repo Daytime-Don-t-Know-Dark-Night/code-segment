@@ -18,18 +18,56 @@ public class GameWin extends JFrame {
 
 	{
 		for (int i = 0; i < 11; i++) {
+
+			// 是否可以放置
+			boolean is_place = true;
+
 			double random = Math.random();
+			Gold gold;        // 存放当前生成的金块
+
 			if (random < 0.3) {
-				objectList.add(new GoldMini());
+				gold = new GoldMini();
 			} else if (random < 0.7) {
-				objectList.add(new Gold());
+				gold = new Gold();
 			} else {
-				objectList.add(new GoldPlus());
+				gold = new GoldPlus();
 			}
 
+			// 生成金块后先判断 是否与其他的金块重叠
+			for (Object obj : objectList) {
+				if (gold.getRec().intersects(obj.getRec())) {
+					// 重叠, 不可放置, 需要重新生成
+					is_place = false;
+				}
+			}
+
+			if (is_place) {
+				objectList.add(gold);
+			} else {
+				is_place = true;
+				i--;
+			}
 		}
-		for (int i = 0; i < 3; i++) {
-			objectList.add(new Rock());
+		for (int i = 0; i < 5; i++) {
+
+			// 是否可以放置
+			boolean is_place = true;
+			Rock rock = new Rock();
+
+			// 生成石块后先判断 是否与其他的石块重叠
+			for (Object obj : objectList) {
+				if (rock.getRec().intersects(obj.getRec())) {
+					// 重叠, 不可放置, 需要重新生成
+					is_place = false;
+				}
+			}
+
+			if (is_place) {
+				objectList.add(rock);
+			} else {
+				is_place = true;
+				i--;
+			}
 		}
 	}
 
