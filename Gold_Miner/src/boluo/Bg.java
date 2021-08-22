@@ -4,6 +4,12 @@ import java.awt.*;
 
 public class Bg {
 
+	// 关卡数
+	static int level = 1;
+
+	// 目标得分
+	int goal = level * 5;
+
 	// 总分
 	static int count = 0;
 

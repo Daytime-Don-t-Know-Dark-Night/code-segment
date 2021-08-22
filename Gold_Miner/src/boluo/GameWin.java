@@ -107,6 +107,11 @@ public class GameWin extends JFrame {
 		while (true) {
 			repaint();
 
+			// 判断当前积分是否满足过关积分
+			if (Bg.count > bg.goal) {
+				System.out.println("过关!");
+			}
+
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
