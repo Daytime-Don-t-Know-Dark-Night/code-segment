@@ -10,6 +10,7 @@ public class Rock extends Object {
 		this.height = 71;
 		this.flag = false;
 		this.m = 50;
+		this.count = 1;
 		this.img = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/rock1.png");
 	}
 }

@@ -20,6 +20,9 @@ public class Object {
 	// 质量, 质量越大, 拉取返回速度越慢
 	int m;
 
+	// 积分
+	int count;
+
 	// 绘制方法
 	void paintSelf(Graphics g) {
 		g.drawImage(img, x, y, null);

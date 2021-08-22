@@ -126,6 +126,8 @@ public class Line {
 							obj.x = -150;
 							obj.y = -150;
 							obj.flag = false;
+							// 加分
+							Bg.count += obj.count;
 							status = 0;
 						}
 					}
