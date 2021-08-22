@@ -112,11 +112,11 @@ public class GameWin extends JFrame {
 
 		// 先将游戏中的元素绘制到新的画布上
 		bg.paintSelf(gImage);
-		line.paintSelf(gImage);
-
+		// 先绘制物体, 在绘制红线, 保证红线显示在物体的上层
 		for (Object obj : objectList) {
 			obj.paintSelf(gImage);
 		}
+		line.paintSelf(gImage);
 
 		// 再把新的画布绘制到显示的画布中
 		g.drawImage(offScreenImage, 0, 0, null);

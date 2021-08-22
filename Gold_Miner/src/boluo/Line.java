@@ -24,6 +24,13 @@ public class Line {
 
 	// 线长
 	double length = 100;
+
+	// 线长最小值
+	double min_length = 100;
+
+	// 线长最大值
+	double max_length = 750;
+
 	double n = 0;
 
 	// 方向
@@ -32,6 +39,9 @@ public class Line {
 	// 状态	0:摇摆	1:抓取	2:收回	3:抓取返回
 	int status;
 
+	// 抓钩图片
+	Image hook = Toolkit.getDefaultToolkit().getImage("Gold_Miner/imgs/hook.png");
+
 	// 碰撞检测, 判断endx endy 是否在x+width, y+height中
 	GameWin frame;
 
@@ -39,7 +49,7 @@ public class Line {
 		this.frame = frame;
 	}
 
-	// 碰撞检测
+	// 碰撞检测, 检测物体是否被抓取
 	void logic() {
 		for (Object obj : this.frame.objectList) {
 			if (endx > obj.x && endx < obj.x + obj.width
@@ -50,11 +60,15 @@ public class Line {
 		}
 	}
 
+	// 绘制方法
 	void lines(Graphics g) {
 		endx = (int) (x + length * Math.cos(n * Math.PI));
 		endy = (int) (y + length * Math.sin(n * Math.PI));
 		g.setColor(Color.red);
+		g.drawLine(x - 1, y, endx - 1, endy);
 		g.drawLine(x, y, endx, endy);
+		g.drawLine(x + 1, y, endx + 1, endy);
+		g.drawImage(hook, endx - 36, endy - 2, null);
 	}
 
 	void paintSelf(Graphics g) {
@@ -73,7 +87,7 @@ public class Line {
 			break;
 
 		case 1:        // 抓取
-			if (length < 500) {
+			if (length < max_length) {
 
 				length = length + 10;
 				lines(g);
@@ -83,7 +97,7 @@ public class Line {
 
 			break;
 		case 2:        // 收回
-			if (length > 100) {
+			if (length > min_length) {
 
 				length = length - 10;
 				lines(g);
@@ -95,7 +109,7 @@ public class Line {
 			break;
 		case 3:
 			int m = 1;
-			if (length > 100) {
+			if (length > min_length) {
 
 				length = length - 10;
 				lines(g);
@@ -108,7 +122,7 @@ public class Line {
 						obj.y = endy;
 
 						// 抓取成功, 移除金块
-						if (length <= 100) {
+						if (length <= min_length) {
 							obj.x = -150;
 							obj.y = -150;
 							obj.flag = false;
