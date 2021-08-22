@@ -23,6 +23,9 @@ public class Object {
 	// 积分
 	int count;
 
+	// 类型 		1:金块	2:石块
+	int type;
+
 	// 绘制方法
 	void paintSelf(Graphics g) {
 		g.drawImage(img, x, y, null);

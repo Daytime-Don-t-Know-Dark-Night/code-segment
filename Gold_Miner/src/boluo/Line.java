@@ -126,9 +126,25 @@ public class Line {
 							obj.x = -150;
 							obj.y = -150;
 							obj.flag = false;
+							Bg.waterFlag = false;
 							// 加分
 							Bg.count += obj.count;
 							status = 0;
+						}
+
+						// 判断是否使用了药水
+						if (Bg.waterFlag) {
+							if (obj.type == 1) {
+								m = 1;
+							}
+							if (obj.type == 2) {
+								obj.x = -150;
+								obj.y = -150;
+								obj.flag = false;
+								Bg.waterFlag = false;
+								status = 2;
+							}
+
 						}
 					}
 

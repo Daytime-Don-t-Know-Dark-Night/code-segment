@@ -86,9 +86,20 @@ public class GameWin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if (e.getButton() == 1) {    // 点击左键
+
+				// 左右摇摆, 点击左键
+				if (e.getButton() == 1 && line.status == 0) {
 					line.status = 1;
 				}
+
+				// 抓取返回, 点击右键
+				if (e.getButton() == 3 && line.status == 3) {
+
+					Bg.waterFlag = true;
+					// 药水数量-1
+					Bg.waterNum--;
+				}
+
 			}
 		});
 
