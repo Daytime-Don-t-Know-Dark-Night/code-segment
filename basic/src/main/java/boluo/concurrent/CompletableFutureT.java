@@ -1,8 +1,8 @@
-package boluo;
+package boluo.concurrent;
 
 import java.util.concurrent.CompletableFuture;
 
-public class Note01_Concurrent {
+public class CompletableFutureT {
 
 	public static void main(String[] args) {
 
