@@ -1,22 +1,23 @@
 package boluo.concurrent;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.*;
 
-public class CompletableFutureT {
+public class FutureTest {
 
-	public static void main(String[] args) {
+	private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-		CompletableFuture<Integer> a1 = CompletableFuture.supplyAsync(() -> func1());
-		CompletableFuture<Integer> a2 = CompletableFuture.supplyAsync(() -> func2());
-		CompletableFuture<Integer> a3 = CompletableFuture.supplyAsync(() -> func3());
-		CompletableFuture<Integer> a4 = CompletableFuture.supplyAsync(() -> func4());
+	public static void main(String[] args) throws ExecutionException, InterruptedException {
 
-		Integer a = a1.join();
-		Integer b = a1.join();
-		Integer c = a1.join();
-		Integer d = a1.join();
+		Future<Integer> a = executor.submit(() -> func1());
+		Future<Integer> b = executor.submit(() -> func2());
+		Future<Integer> c = executor.submit(() -> func3());
+		Future<Integer> d = executor.submit(() -> func4());
 
-		System.out.println(a + ", " + b + ", " + c + ", " + d);
+		System.out.println(a.get());
+		System.out.println(b.get());
+		System.out.println(c.get());
+		System.out.println(d.get());
+
 	}
 
 	public static int func1() {
