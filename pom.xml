@@ -11,6 +11,7 @@
 
     <modules>
         <module>socket</module>
+        <module>basic</module>
     </modules>
 
     <properties>
