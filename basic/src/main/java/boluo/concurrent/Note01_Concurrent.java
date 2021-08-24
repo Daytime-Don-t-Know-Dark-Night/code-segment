@@ -68,9 +68,25 @@ public class Note01_Concurrent {
 		// 如果要提交一批任务, 可以使用invokeAll一次提交
 		ExecutorService executorService3 = Executors.newFixedThreadPool(2);
 		List<Callable<String>> tasks_ = Arrays.asList(() -> "dingc", () -> "boluo");
+		List<Future<String>> futures = executorService3.invokeAll(tasks_);
 
-		// https://www.jb51.net/article/206727.htm#_label2
+		// invokeAny(): 线程池执行若干个是实现了Callable的任务, 然后返回最先执行结束的任务的值, 其他未完成的任务将被正常取消掉不会有异常
+		ExecutorService executorService4 = Executors.newFixedThreadPool(2);
+		List<Callable<String>> tasks__ = Arrays.asList(
+				() -> {
+					Thread.sleep(500);
+					System.out.println("Hello");
+					return "hello";
+				}, () -> {
+					System.out.println("World");
+					return "world";
+				});
+		String s = executorService4.invokeAny(tasks__);
 
+		// submit(): 可以通过这个方法提交一个实现了Runnable接口的任务, 然后有返回值, 而Runnable接口中的run方法是没有返回值的
+		ExecutorService executorService5 = Executors.newFixedThreadPool(2);
+		Future<String> fu = executorService5.submit(() -> "boluo");
+		fu.get();
 	}
 
 }
