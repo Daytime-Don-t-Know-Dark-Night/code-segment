@@ -3,9 +3,6 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/58.2/icu4j-58.2.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/58.2/icu4j-58.2-javadoc.jar!/" />
-    </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/58.2/icu4j-58.2-sources.jar!/" />
     </SOURCES>
