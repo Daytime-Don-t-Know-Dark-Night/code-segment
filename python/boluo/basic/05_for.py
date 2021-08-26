@@ -1,4 +1,5 @@
 import random
+from math import sqrt
 
 # for-in循环
 
@@ -46,5 +47,36 @@ while True:
 # 输出乘法口诀表
 for i in range(1, 10):
     for j in range(1, i + 1):
-        print("%d*%d=%d" % (i, j, i * j), end="\t")
+        print("%d*%d=%d" % (i, j, i * j), "\t")
     print()
+
+# 判断一个正整数是不是素数(只能被1和自身整除)
+num = int(input("请输入一个正整数: "))
+end = int(sqrt(num))
+is_prime = True
+
+for x in range(2, end + 1):
+    if num % x == 0:
+        is_prime = False
+        break
+
+if is_prime and num != 1:
+    print("%d是素数" % num)
+else:
+    print("%d不是素数" % num)
+
+# 计算两个数的最大公约数和最小公倍数
+# 两个数的最大公约数是两个数的公共因子中最大的那个数, 最小公倍数是能够同时被两个数整除的最小的那个数
+x = int(input("x = "))
+y = int(input("y = "))
+# 如果x大于y就交换x和y的值
+if x > y:
+    x, y = y, x
+
+# 从两个数中较大的数开始做递减的循环
+for factor in range(x, 0, -1):
+    if x % factor == 0 and y % factor == 0:
+        print("%d和%d的最大公约数是%d" % (x, y, factor))
+        print("%d和%d的最小公倍数是%d" % (x, y, x * y // factor))
+        break
+
