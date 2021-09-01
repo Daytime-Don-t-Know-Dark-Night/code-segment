@@ -12,12 +12,10 @@ s1 = '\'hello, world!\''
 s2 = '\n\\hello, world!\\\n'
 print(s1, s2, end='')
 
-
 # 不希望转义, 在字符串最前面加r
 s1 = r'\'hello, world!\''
 s2 = r'\n\\hello, world!\\\n'
 print(s1, s2, end='')
-
 
 s1 = 'hello' * 3
 print(s1)
@@ -39,7 +37,6 @@ print(str2[2::2])  # c246
 print(str2[::2])  # ac246
 print(str2[::-1])  # 654321cba
 print(str2[-3:-1])  # 45
-
 
 # 处理字符串
 str1 = 'hello, world!'
@@ -79,15 +76,68 @@ print(str1.isalnum())
 # 对字符串两侧空格过滤
 print(str1.strip())
 
-
 # 格式化输出字符串
 a, b = 5, 10
 print('%d * %d = %d' % (a, b, a * b))
 print('{0} * {1} = {2}'.format(a, b, a * b))
 print(f'{a} * {b} = {a * b}')
 
-
-# 列表
+# 列表 **********************************************************************************************************
 list1 = [1, 3, 5, 7, 100]
 print(list1)
 
+list2 = ["hello"] * 3
+print(list2)
+
+print(len(list1))
+print(list1[0])
+print(list1[1])
+print(list1[4])
+print(list1[-1])  # 100
+print(list1[-3])  # 5
+
+# 修改list
+list1[2] = 300
+print(list1)
+
+# 通过下标遍历列表
+for index in range(len(list1)):
+    print(list1[index])
+
+# 增强for循环
+for elem in list1:
+    print(elem)
+
+# 通过enumerate函数处理列表之后, 可以同事获得元素索引和值
+for index, elem in enumerate(list1):
+    print(index, elem)
+
+# 向列表中添加元素以及从列表中移除元素*************************************************************************
+
+list1 = [1, 3, 5, 7, 100]
+list1.append(200)
+list1.insert(1, 400)
+
+# 合并两个列表
+# list1.append([1000,2000])
+list1 += [1000, 2000]
+print(list1)
+print(len(list1))
+
+# 先通过成员运算判断元素是否在列表中, 如果存在就删除该元素
+if 3 in list1:
+    list1.remove(3)
+
+if 1234 in list1:
+    list1.remove(1234)
+
+# 从指定的位置删除元素
+print(list1)
+list1.pop(0)
+list1.pop(len(list1) - 1)
+print(list1)
+
+# 清空列表
+list1.clear()
+
+# 和字符串一样, 列表也可以做切片操作, 通过切片操作我们可以实现
