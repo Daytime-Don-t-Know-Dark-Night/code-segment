@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericSymbol {
+public class GenericSymbol<T> {
 
 	/**
 	 * @param args
@@ -20,12 +20,21 @@ public class GenericSymbol {
 		// 1. <T> T和T的区别: T是Type的缩写, <T> T表示返回值是一个泛型, 传入什么类型, 就返回什么类型
 		// 而单独的T表示限制传入的类型参数
 
-		GenericSymbol gs = new GenericSymbol();
-
+		GenericSymbol<String> gs = new GenericSymbol<String>();
 		List<String> array = new ArrayList<String>();
+		array.add("dingc");
+		array.add("boluo");
+
+		String str = gs.getListFirst(array);
+		System.out.println(str);
 
 
-
+		GenericSymbol<Integer> gs2 = new GenericSymbol<Integer>();
+		List<Integer> nums = new ArrayList<Integer>();
+		nums.add(1);
+		nums.add(2);
+		Integer num = gs2.getListFirst(nums);
+		System.out.println(num);
 	}
 
 	/**
