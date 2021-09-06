@@ -217,6 +217,120 @@ if __name__ == '__main__':
     main()
 
 
-
 # 使用元组 *****************************************************************************************
-# Python中的元组与列表类似也是一种容器数据类型, 不同的是元组中的元素不能修改, 
+# Python中的元组与列表类似也是一种容器数据类型, 不同的是元组中的元素不能修改,
+
+t = ("丁超", 20, "杭州")
+print(t)
+
+# 获取元组中的数据
+print(t[0])
+print(t[3])
+
+for member in t:
+    print(member)
+
+# 重新给元组赋值
+# t[0] = "boluo"
+t = ("菠萝", 20, "上海")
+print(t)
+
+# 将元组转换成列表
+person = list(t)
+print(person)
+
+# 列表中可以修改元素
+person[0] = "李小龙"
+person[1] = 25
+print(person)
+
+# 将列表转换成元组
+fruits_list = ["apple", "banana", "orange"]
+fruits_tuple = tuple(fruits_list)
+print(fruits_tuple)
+
+# 使用集合 ***************************************************************************************************
+# Python中集合不允许有重复元素, 而且可以进行交集, 并集, 差集等元素
+# 创建集合的字面量语法
+set1 = {1, 2, 3, 3, 3, 2}
+print(set1)
+print("length = ", len(set1))
+
+# 创建集合的构造器语法
+set2 = set(range(1, 10))
+set3 = set((1, 2, 3, 3, 2, 1))
+print(set2, set3)
+
+# 创建集合的推导式语法
+set4 = {num for num in range(1, 100) if num % 3 == 0 or num % 5 == 0}
+print(set4)
+
+
+# 向集合添加元素和从集合删除元素
+set1.add(4)
+set1.add(5)
+set2.update([11, 12])
+set2.discard(5)
+
+if 4 in set2:
+    set2.remove(4)
+print(set1, set2)
+print(set3.pop())
+print(set3)
+
+
+print(set1)
+print(set2)
+print(set3)
+
+# 集合的交集, 并集, 差集, 对称差运算
+print(set1 & set2)
+print(set1 | set2)
+print(set1 - set2)
+print(set1 ^ set2)
+
+# 判断子集和超集
+print(set2 <= set1)
+print(set3 <= set1)
+print(set1 >= set2)
+print(set1 >= set3)
+
+
+# 使用字典 ***************************************************************************************
+# 创建字典
+scores = {"丁超": 20, "菠萝": 30, "李小龙": 40}
+print(scores)
+
+# 创建字典的构造器语法
+items1 = dict(one=1, two=2, three=3, four=4)
+# 通过zip函数将两个序列压成字典
+items2 = dict(zip(["a", "b", "c"], "123"))
+print(items2)
+# 创建字典的推导式语法
+items3 = {num: num ** 2 for num in range(1, 10)}
+print(scores["丁超"])
+print(scores["菠萝"])
+
+# 遍历字典
+for key in scores:
+    print(f'{key}:{scores[key]}')
+
+# 更新字典中的元素
+scores["丁超"] = 21
+scores["菠萝"] = 31
+scores.update(bar=20, foo=30)
+print(scores)
+
+if "武则天" in scores:
+    print(scores["武则天"])
+print(scores.get("武则天"))
+
+# get方法可以设置默认值
+print(scores.get("武则天", 60))
+
+# 删除字典中的元素
+print(scores.popitem())
+print(scores.pop("菠萝", 21))
+
+# 清空字典
+scores.clear()
