@@ -1,5 +1,7 @@
 package boluo.jsoup;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import org.apache.commons.compress.utils.Charsets;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -26,6 +28,7 @@ import java.util.stream.Stream;
 
 public class FromBoss {
 
+	private static final ObjectMapper mapper = new ObjectMapper();
 	private static final Logger logger = LoggerFactory.getLogger(FromBoss.class);
 	private static final CloseableHttpClient http;
 
@@ -43,28 +46,36 @@ public class FromBoss {
 		String url = "https://www.zhipin.com/job_detail/?query=%E9%94%80%E5%94%AE&city=101120800&industry=100504&position=";
 
 		HttpClientContext httpContext = HttpClientContext.create();
-		String cookie = "Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1631095642; lastCity=100010000; __g=-; __c=1631095643; __l=l=%2Fwww.zhipin.com%2Fjob_detail%2F%3Fquery%3D%25E9%2594%2580%25E5%2594%25AE%26city%3D101120800%26industry%3D100504%26position%3D&s=3&friend_source=0; __a=80672064.1631095643..1631095643.2.1.2.2; __zp_stoken__=67f6cC3xVDTVhX19GaDl5NGMpe0RATx1lFkYkKUVrcjA6YFsVWzBjO11dGm4rMX0eWjtNRFdEcVICNhcZKG4SIyVmMiF1MTdtelF9Zn4ZOgcYYgMeZ1MSHyg0cQ1RRwJcahhdV3c1DlB%2BCQU5; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1631096964";
+		String cookie = "SERVERID=606144fb348bc19e48aededaa626f54e|1631107279|1631107278; ___gtid=-587531361; __fid=e6ac7fa0f4ec09a8e4366339d60fc5c6; lastCity=100010000; __c=1631107312; __g=-; __a=43415077.1631022356.1631026318.1631107312.7.3.1.7; __zp_stoken__=67f6cC31zIFAeAQ50PjJ5DWkTWAJjUSBIYggCOFU4bjcibCl3BV95NmMpAl8pNigkWjtNRFduBDpVHzkZUVMnJzFWODYlIzZlKVdzYXgZOgcYYgMkMlQQLjBATwBLKFxcahhdV3c1DlB%2BCQU5";
 
 		Document d1 = currRequest(httpContext, url, cookie);
-		Elements es = d1.select("div .primary-wrapper div div span.job-name");
-		Elements es2 = d1.select("div .primary-wrapper div div .red");
-		Elements es3 = d1.select("div .company-text h3");
-		List<String> position = es.stream().map(Element::text).collect(Collectors.toList());
-		List<String> salary = es2.stream().map(Element::text).collect(Collectors.toList());
-		List<String> company = es3.stream().map(Element::text).collect(Collectors.toList());
+		Stream<Document> nextRes = Stream.iterate(2, i -> i + 1).limit(7)
+				.map(i -> currRequest(httpContext, url + "&page=" + i, cookie));
 
-		// Preconditions.checkNotNull(position.size() == salary.size(), "...");
+		List<ObjectNode> res = Stream.concat(
+				Stream.of(d1),
+				nextRes
+		).flatMap(i -> {
+			Elements es = i.select("div");
+			return es.stream().map(tr -> {
 
-		for (int i = 0; i < position.size(); i++) {
-			System.out.println(position.get(i) + ", " + salary.get(i) + ", " + company.get(i));
-		}
+				ObjectNode obj = mapper.createObjectNode();
+				Elements es1 = tr.select(".primary-wrapper div div span.job-name");
+				Elements es2 = tr.select(".primary-wrapper div div .red");
+				Elements es3 = tr.select(".company-text h3");
 
-		List<Document> nextRes = Stream.iterate(2, i -> i + 1).limit(7)
-				.map(i -> currRequest(httpContext, url + "&page=" + i, cookie))
-				.collect(Collectors.toList());
+				Preconditions.checkNotNull(es1.size() == es2.size(), "...");
+				for (int k = 0; k < es1.size(); k++) {
+					obj.put("位置", es1.get(k).text());
+					obj.put("薪水", es2.get(k).text());
+					obj.put("公司", es3.get(k).text());
+				}
+				return obj;
+			});
 
+		}).collect(Collectors.toList());
 
-		System.out.println(d1);
+		System.out.println(res);
 	}
 
 
