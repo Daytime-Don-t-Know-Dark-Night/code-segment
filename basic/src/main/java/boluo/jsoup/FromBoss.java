@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FromBoss {
 
@@ -42,18 +43,27 @@ public class FromBoss {
 		String url = "https://www.zhipin.com/job_detail/?query=%E9%94%80%E5%94%AE&city=101120800&industry=100504&position=";
 
 		HttpClientContext httpContext = HttpClientContext.create();
-		String cookie = "lastCity=100010000; __g=-; __c=1631022356; __a=43415077.1631022356..1631022356.3.1.3.3; __zp_stoken__=35adcWGJ1ZnV7aH9Qb1dtDRUGElF%2FKhsnWzZSNGMhcXQcMnBNfwRRNV0nbyIpPQghJi4HF38EajN2JTwZeklhSAtDYRUQLAJaKkdyCjpwHy59b0lyHnYjEwpOJkNQWipcFg0XBF91bBBVcnk5";
+		String cookie = "Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1631095642; lastCity=100010000; __g=-; __c=1631095643; __l=l=%2Fwww.zhipin.com%2Fjob_detail%2F%3Fquery%3D%25E9%2594%2580%25E5%2594%25AE%26city%3D101120800%26industry%3D100504%26position%3D&s=3&friend_source=0; __a=80672064.1631095643..1631095643.2.1.2.2; __zp_stoken__=67f6cC3xVDTVhX19GaDl5NGMpe0RATx1lFkYkKUVrcjA6YFsVWzBjO11dGm4rMX0eWjtNRFdEcVICNhcZKG4SIyVmMiF1MTdtelF9Zn4ZOgcYYgMeZ1MSHyg0cQ1RRwJcahhdV3c1DlB%2BCQU5; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1631096964";
 
 		Document d1 = currRequest(httpContext, url, cookie);
 		Elements es = d1.select("div .primary-wrapper div div span.job-name");
 		Elements es2 = d1.select("div .primary-wrapper div div .red");
+		Elements es3 = d1.select("div .company-text h3");
 		List<String> position = es.stream().map(Element::text).collect(Collectors.toList());
 		List<String> salary = es2.stream().map(Element::text).collect(Collectors.toList());
+		List<String> company = es3.stream().map(Element::text).collect(Collectors.toList());
 
-		Preconditions.checkNotNull(position.size() == salary.size(), "...");
+		// Preconditions.checkNotNull(position.size() == salary.size(), "...");
+
 		for (int i = 0; i < position.size(); i++) {
-			System.out.println(position.get(i) + ", " + salary.get(i));
+			System.out.println(position.get(i) + ", " + salary.get(i) + ", " + company.get(i));
 		}
+
+		List<Document> nextRes = Stream.iterate(2, i -> i + 1).limit(7)
+				.map(i -> currRequest(httpContext, url + "&page=" + i, cookie))
+				.collect(Collectors.toList());
+
+
 		System.out.println(d1);
 	}
 
