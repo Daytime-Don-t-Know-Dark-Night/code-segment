@@ -5,7 +5,7 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.functions.{expr, count, sum}
 import scala.collection.JavaConversions
 
-object SQL01 {
+object SQL02 {
 
     def main(args: Array[String]): Unit = {
 
