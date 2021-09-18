@@ -22,6 +22,7 @@ import static org.apache.spark.sql.functions.*;
 
 public class UDAFunc {
 
+	// https://www.cnblogs.com/cc11001100/p/9471859.html
 	public static void main(String[] args) {
 		SparkSession spark = SparkSession
 				.builder()
