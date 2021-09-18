@@ -8,6 +8,8 @@ import scala.collection.JavaConversions
 
 object RowNumber {
 
+    // https://blog.csdn.net/wuxintdrh/article/details/81152045
+    // https://bbs.huaweicloud.com/blogs/detail/289870
     def main(args: Array[String]): Unit = {
 
         val spark = SparkSession.builder().master("local[*]").getOrCreate()
