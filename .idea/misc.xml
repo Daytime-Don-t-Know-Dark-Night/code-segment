@@ -6,6 +6,7 @@
         <option value="$PROJECT_DIR$/socket/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/scala/pom.xml" />
+        <option value="$PROJECT_DIR$/leetcode/pom.xml" />
       </list>
     </option>
   </component>

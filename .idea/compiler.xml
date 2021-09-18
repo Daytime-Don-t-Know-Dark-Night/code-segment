@@ -6,13 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="leetcode" />
+        <module name="socket" />
         <module name="basic" />
         <module name="scala" />
-        <module name="socket" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="basic" target="8" />
+      <module name="leetcode" target="8" />
       <module name="parent" target="8" />
       <module name="scala" target="8" />
       <module name="socket" target="8" />
@@ -21,6 +23,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="basic" options="-parameters" />
+      <module name="leetcode" options="-parameters" />
       <module name="scala" options="-parameters" />
     </option>
   </component>
