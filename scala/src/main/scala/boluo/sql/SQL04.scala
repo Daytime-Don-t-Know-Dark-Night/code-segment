@@ -2,6 +2,7 @@ package boluo.sql
 
 import org.apache.spark.sql.{RowFactory, SparkSession}
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.functions._
 
 import scala.collection.JavaConversions
 
@@ -76,6 +77,8 @@ object SQL04 {
 
         ds.where("login_status = 1")
             .selectExpr("uid", "dt", "row_number() over(distribute by uid sort by dt) rm")
+            .groupBy("uid").agg(max("rm").as("rm"))
+            .where("rm >= 7")
             .show(false)
     }
 }
