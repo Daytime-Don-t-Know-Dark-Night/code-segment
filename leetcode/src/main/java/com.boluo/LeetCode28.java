@@ -24,7 +24,10 @@ package com.boluo;
 public class LeetCode28 {
 
 	public static void main(String[] args) {
-
+		System.out.println(strStr("hello", "ll"));
+		System.out.println(strStr("aaaaa", "bba"));
+		System.out.println(strStr("", ""));
+		System.out.println(strStr("a", "a"));
 	}
 
 	public static int strStr(String haystack, String needle) {
@@ -33,14 +36,23 @@ public class LeetCode28 {
 			return 0;
 		}
 
-		// 1.普通解法
-		char[] nums1 = haystack.toCharArray();
-		char[] nums2 = needle.toCharArray();
-
-		//
-		for (int i = 0; i < nums1.length; i++) {
-
+		for (int i = 0; i <= haystack.length() - needle.length(); i++) {
+			boolean br = true;
+			for (int j = 0; j < needle.length(); j++) {
+				if (haystack.charAt(i + j) != needle.charAt(j)) {
+					br = false;
+					break;
+				}
+			}
+			if (br) {
+				return i;
+			}
 		}
+		return -1;
+	}
+
+	// TODO KMP算法
+	public static int strStr2(String haystack, String needle) {
 		throw new UnsupportedOperationException();
 	}
 }
