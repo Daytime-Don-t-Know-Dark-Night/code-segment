@@ -1,6 +1,6 @@
 package boluo.sql
 
-import org.apache.spark.sql.{DataFrame, RowFactory, SparkSession}
+import org.apache.spark.sql.{DataFrame, RowFactory, SparkSession, functions}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.functions._
 
@@ -29,12 +29,11 @@ object SQL25 {
             RowFactory.create(4: java.lang.Integer, "2019-08-03")
         )
 
-        val ds = spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
-        ds.show(false)
-        ds.withColumn("date", date_format(col("dates"), "yyyy-MM-dd"))
+        var ds = spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
+        ds = ds.withColumn("date", date_format(col("dates"), "yyyy-MM-dd"))
             .drop("dates")
-            .show(false)
 
+        ds.show(false)
         // +---+----------+
         // |uid|date      |
         // +---+----------+
@@ -58,6 +57,10 @@ object SQL25 {
         // 2. 登录时间减去排序的序号, 得到一个日期
         // 3. 按照这个日期分组求和, 最大的一个数就是连续登录最长的天数
 
-
+        ds.withColumn("rk", expr("row_number() over(partition by uid order by date)"))
+            .withColumn("date_diff", expr("date_sub(date, cast(rk as int))"))
+            .groupBy("uid", "date_diff")
+            .agg(count(col("date_diff")).as("maxLoginDays"))
+            .show(false)
     }
 }
