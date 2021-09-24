@@ -24,7 +24,6 @@ object SQL22 {
             RowFactory.create(3: java.lang.Integer, "ww")
         )
 
-        @SuppressWarnings("unchecked")
         val ds1 = spark.createDataFrame(JavaConversions.seqAsJavaList(rows1), schema)
         val ds2 = spark.createDataFrame(JavaConversions.seqAsJavaList(rows2), schema)
 
