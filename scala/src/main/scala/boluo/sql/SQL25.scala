@@ -57,10 +57,26 @@ object SQL25 {
         // 2. 登录时间减去排序的序号, 得到一个日期
         // 3. 按照这个日期分组求和, 最大的一个数就是连续登录最长的天数
 
-        ds.withColumn("rk", expr("row_number() over(partition by uid order by date)"))
+        ds = ds.withColumn("rk", expr("row_number() over(partition by uid order by date)"))
             .withColumn("date_diff", expr("date_sub(date, cast(rk as int))"))
             .groupBy("uid", "date_diff")
             .agg(count(col("date_diff")).as("maxLoginDays"))
+
+        // +---+----------+------------+
+        // |uid|date_diff |maxLoginDays|
+        // +---+----------+------------+
+        // |1  |2019-07-31|3           |
+        // |3  |2019-07-31|1           |
+        // |3  |2019-08-01|1           |
+        // |4  |2019-07-27|2           |
+        // |4  |2019-07-29|3           |
+        // |2  |2019-07-31|2           |
+        // +---+----------+------------+
+
+        ds.groupBy("uid")
+            .agg(
+                max("maxLoginDays")
+            )
             .show(false)
     }
 }
