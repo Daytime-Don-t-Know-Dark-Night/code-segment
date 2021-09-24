@@ -1,10 +1,7 @@
 package boluo.spark;
 
-
-import org.apache.spark.sql.Column;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
+import com.google.common.collect.ImmutableList;
+import org.apache.spark.sql.*;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.api.java.UDF2;
 import org.apache.spark.sql.expressions.MutableAggregationBuffer;
@@ -16,6 +13,7 @@ import org.apache.spark.sql.types.StringType$;
 import org.apache.spark.sql.types.StructType;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.apache.spark.sql.functions.*;
@@ -24,13 +22,24 @@ public class UDAFunc {
 
 	// https://www.cnblogs.com/cc11001100/p/9471859.html
 	public static void main(String[] args) {
+
 		SparkSession spark = SparkSession
 				.builder()
 				.master("local[*]")
 				.getOrCreate();
 
-		String path = "file:///D:/test/t1";
-		Dataset<Row> ds = spark.read().format("delta").load(path);
+		StructType schema = new StructType()
+				.add("id", "int");
+
+		Row r1 = RowFactory.create(1);
+		Row r2 = RowFactory.create(2);
+		Row r3 = RowFactory.create(3);
+		Row r4 = RowFactory.create(4);
+		Row r5 = RowFactory.create(5);
+
+		List<Row> list = ImmutableList.of(r1, r2, r3, r4, r5);
+		Dataset<Row> ds = spark.createDataFrame(list, schema);
+		ds.show(false);
 
 		Dataset<Row> ds1 = ds.select(avg("id"));
 		ds1.show(false);

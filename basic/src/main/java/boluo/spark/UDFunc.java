@@ -1,14 +1,15 @@
 package boluo.spark;
 
-import org.apache.spark.sql.Column;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
+import com.google.common.collect.ImmutableList;
+import org.apache.spark.sql.*;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.api.java.UDF2;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StringType$;
+import org.apache.spark.sql.types.StructType;
+
+import java.util.List;
 
 import static org.apache.spark.sql.functions.expr;
 import static org.apache.spark.sql.functions.udf;
@@ -16,19 +17,25 @@ import static org.apache.spark.sql.functions.udf;
 public class UDFunc {
 
 	public static void main(String[] args) {
+
 		SparkSession spark = SparkSession
 				.builder()
 				.master("local[*]")
 				.getOrCreate();
 
-		String path = "file:///D:/test/t1";
-//		Dataset<Long> writeDs = spark.range(0, 5);
-//		writeDs.coalesce(1).write()
-//				.format("delta")
-//				.mode("overwrite")
-//				.save(path);
+		StructType schema = new StructType()
+				.add("id", "long");
 
-		Dataset<Row> ds = spark.read().format("delta").load(path);
+		Row r1 = RowFactory.create(1L);
+		Row r2 = RowFactory.create(2L);
+		Row r3 = RowFactory.create(3L);
+		Row r4 = RowFactory.create(4L);
+		Row r5 = RowFactory.create(5L);
+
+		List<Row> list = ImmutableList.of(r1, r2, r3, r4, r5);
+		Dataset<Row> ds = spark.createDataFrame(list, schema);
+		ds.show(false);
+
 		Dataset<Row> ds0 = ds.withColumn("id2", append("id", "a"));
 		ds0.show(false);
 
