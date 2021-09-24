@@ -43,9 +43,52 @@ object SQL22 {
         // from t1
         // left join t2
         // on t1.id = t2.id
-        // where t1.id is null
+        // where t2.id is null
         // union
-        //
+        // select t2.id as id, t2.name as name
+        // from t1
+        // right join t2
+        // on t1.id = t2.id
+        // where t1.id is null
 
+        val ds3 = ds1.as("a")
+            .join(
+                ds2.as("b"),
+                expr("a.id = b.id"),
+                "left"
+            )
+            .where("b.id is null")
+            .selectExpr(
+                "a.id id",
+                "a.name name"
+            )
+
+        // +---+----+----+----+
+        // |id |name|id  |name|
+        // +---+----+----+----+
+        // |1  |zs  |1   |zs  |
+        // |2  |ls  |null|null|
+        // +---+----+----+----+
+
+        val ds4 = ds1.as("a")
+            .join(
+                ds2.as("b"),
+                expr("a.id = b.id"),
+                "right"
+            )
+            .where("a.id is null")
+            .selectExpr(
+                "b.id id",
+                "b.name name"
+            )
+
+        ds3.union(ds4).show(false)
+
+        // +---+----+
+        // |id |name|
+        // +---+----+
+        // |2  |ls  |
+        // |3  |ww  |
+        // +---+----+
     }
 }
