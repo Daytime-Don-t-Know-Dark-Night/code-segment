@@ -48,7 +48,8 @@ object Rank {
         // +---+------+-----+
 
         ds.withColumn("row_num", expr("row_number() over(partition by id order by score)"))
-            .withColumn("rank", expr("rank()"))
+            .withColumn("rank", expr("rank() over(partition by id order by score)"))
+            .withColumn("dense_rank", expr("dense_rank() over(partition by id order by score)"))
             .show(false)
     }
 }
