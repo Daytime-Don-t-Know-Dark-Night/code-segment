@@ -1,9 +1,13 @@
 package boluo.algorithm;
 
+import org.junit.Assert;
+
 public class BinSearch {
 
 	public static void main(String[] args) {
-
+		int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+		int result = binSearch1(nums, 0, 9, 8);
+		Assert.assertEquals(result, 7);
 	}
 
 	// 递归写法
@@ -27,8 +31,8 @@ public class BinSearch {
 		int max = nums.length - 1;
 		int mid = (min + max) / 2;
 
-		while (key != mid) {
-			if (key < mid) {
+		while (key != nums[mid]) {
+			if (key < nums[mid]) {
 				max = mid - 1;
 			} else {
 				min = mid + 1;
