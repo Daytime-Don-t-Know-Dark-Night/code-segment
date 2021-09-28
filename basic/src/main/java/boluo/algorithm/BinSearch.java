@@ -26,9 +26,8 @@ public class BinSearch {
 	}
 
 	// 非递归写法
-	public static int binSearch1(int[] nums, int low, int high, int key) {
-		int min = 0;
-		int max = nums.length - 1;
+	public static int binSearch1(int[] nums, int min, int max, int key) {
+
 		int mid = (min + max) / 2;
 
 		while (key != nums[mid]) {
