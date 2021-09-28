@@ -94,7 +94,8 @@ public class UDAFunc {
 
 			@Override
 			public void merge(MutableAggregationBuffer buffer1, Row buffer2) {
-
+				buffer1.update(0, buffer1.getInt(0) + buffer2.getInt(0));
+				buffer1.update(1, buffer1.getInt(1) + buffer2.getInt(1));
 			}
 
 			@Override
