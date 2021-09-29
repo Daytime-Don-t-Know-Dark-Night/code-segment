@@ -52,6 +52,18 @@ public class LeetCode66 {
 	}
 
 	public static int[] plusOne(int[] digits) {
-		throw new UnsupportedOperationException();
+
+		for (int i = digits.length - 1; i >= 0; i--) {
+			digits[i]++;
+			digits[i] = digits[i] % 10;
+			if (digits[i] != 0) {
+				return digits;
+			}
+		}
+
+		// 程序走到这里还没有结束, 即出现了类似999的情况, 要进一位
+		digits = new int[digits.length + 1];
+		digits[0] = 1;
+		return digits;
 	}
 }
