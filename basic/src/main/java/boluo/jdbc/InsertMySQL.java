@@ -37,8 +37,8 @@ public class InsertMySQL {
 
 		long startTime = System.currentTimeMillis();
 		String name = "测试一百万条数据";
-		JdbcOptionsInWrite opt = Jdbcs.options(uri, name, "date varchar(64)");
-		Outputs.createTable(ds, opt, "KEY(date)");
+		JdbcOptionsInWrite opt = Jdbcs.options(uri, name, "name varchar(64)");
+		// Outputs.createTable(ds, opt, "KEY(name)");
 		Outputs.replace(ds, opt, "1=1");
 		long endTime = System.currentTimeMillis();
 
