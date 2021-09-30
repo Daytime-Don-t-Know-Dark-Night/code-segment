@@ -46,7 +46,7 @@ public class Jdbcs {
 		if (uri.contains("postgresql")) {
 			props.put(JDBCOptions.JDBC_DRIVER_CLASS(), "org.postgresql.Driver");
 		} else {
-			props.put(JDBCOptions.JDBC_DRIVER_CLASS(), "com.mysql.cj.jdbc.Driver");
+			props.put(JDBCOptions.JDBC_DRIVER_CLASS(), "com.mysql.jdbc.Driver");
 		}
 		if (!Strings.isNullOrEmpty(uri)) {
 			props.put(JDBCOptions.JDBC_URL(), uri);
