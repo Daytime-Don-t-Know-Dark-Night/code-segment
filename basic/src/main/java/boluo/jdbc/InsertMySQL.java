@@ -18,8 +18,7 @@ public class InsertMySQL {
 
 		SparkSession spark = SparkSession.builder().master("local[*]").getOrCreate();
 
-		String uri = "jdbc:mysql://local.landeli.com/test_boluo?characterEncoding=UTF-8&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&user=root&password=Xlpro2019";
-		// String uri = "jdbc:mysql://local.boluo.com/test_boluo?characterEncoding=UTF-8&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&user=root&password=123";
+		String uri = "jdbc:mysql://local.boluo.com/test_boluo?characterEncoding=UTF-8&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&user=root&password=123";
 		String filterPath = "file:///D:/filter";
 
 		StructType schema = new StructType()
