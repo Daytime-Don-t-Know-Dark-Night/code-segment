@@ -13,7 +13,10 @@ public class JdbcDemo {
 	private static final Logger logger = LoggerFactory.getLogger(JdbcDemo.class);
 
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
+		// 1.加载驱动
 		Class.forName("com.mysql.jdbc.Driver");
+
+		// 2.建立连接
 		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/boluo", "root", "root");
 		return conn;
 	}
@@ -26,8 +29,12 @@ public class JdbcDemo {
 		try {
 			conn = jdbc.getConnection();
 			stmt = conn.createStatement();
+
+			// 3.向数据库发送SQL
 			res = stmt.executeQuery("select * from user");
 			while (res.next()) {
+
+				// 4.处理返回结果
 				Integer id = res.getInt("id");
 				String name = res.getString("name");
 				Integer age = res.getInt("age");
@@ -42,7 +49,7 @@ public class JdbcDemo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			// 关闭连接
+			// 5.关闭连接
 		}
 	}
 
