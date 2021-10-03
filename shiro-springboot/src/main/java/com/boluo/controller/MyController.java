@@ -8,6 +8,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MyController {
@@ -53,6 +54,12 @@ public class MyController {
 			model.addAttribute("msg", "密码不正确!!!");
 			return "login";
 		}
+	}
+
+	@RequestMapping("noauth")
+	@ResponseBody
+	public String unauthorized() {
+		return "未经授权, 无法访问此页面!!!";
 	}
 
 }

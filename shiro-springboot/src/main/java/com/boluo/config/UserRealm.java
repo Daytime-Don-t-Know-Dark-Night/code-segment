@@ -1,9 +1,12 @@
 package com.boluo.config;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 
 public class UserRealm extends AuthorizingRealm {
 
@@ -11,7 +14,17 @@ public class UserRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
 		System.out.println("执行了=>授权doGetAuthorizationInfo");
-		return null;
+
+		// 给用户授权
+		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		info.addStringPermission("user:add");
+
+		// 获取当前登录的对象
+		Subject subject = SecurityUtils.getSubject();
+		// User currentUser = (User) subject.getPrincipal();	// 从认证方法中获取user对象, 在返回出来取到
+		// info.addStringPermission(currentUser.getPerms());
+
+		return info;
 	}
 
 	// 认证
@@ -30,6 +43,6 @@ public class UserRealm extends AuthorizingRealm {
 		}
 
 		// 密码认证, shiro处理
-		return new SimpleAuthenticationInfo("", password, "");
+		return new SimpleAuthenticationInfo("user", password, "");
 	}
 }
