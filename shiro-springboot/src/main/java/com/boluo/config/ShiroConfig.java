@@ -26,13 +26,22 @@ public class ShiroConfig {
 		// user: 需要记住我
 		// perms: 拥有某个资源的权限
 		// role: 拥有角色权限
+
+		// 拦截
 		Map<String, String> filterMap = new LinkedHashMap<>();
 		filterMap.put("/user/add", "authc");
 		filterMap.put("/user/update", "authc");
 		bean.setFilterChainDefinitionMap(filterMap);
 
+		// 授权
+		// 表示user用户要有add权限才能访问, 未授权会跳转到401
+		filterMap.put("/user/add", "perms[user:add]");
+
 		// 设置登录的请求
 		bean.setLoginUrl("/toLogin");
+
+		// 设置未授权页面
+		bean.setUnauthorizedUrl("/noauth");
 
 		return bean;
 	}
