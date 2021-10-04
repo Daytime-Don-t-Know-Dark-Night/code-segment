@@ -71,6 +71,14 @@
         </ol>
     </div>
 
+    <!-- 注册组件, 组件本质上是一个具有预定义选项的实例 -->
+    <div id="todo-list-app">
+        <ol>
+            <!-- 现在我们为每个 todo-item提供todo对象, todo对象是变量, 即其内容可以是动态的, 我们也需要为每个组件提供一个key -->
+            <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+    </div>
+
     <!-- ******************************************************************************************************** -->
 
     <script>
@@ -150,6 +158,28 @@
             }
         }
         Vue.createApp(ListRendering).mount("#list-rendering")
+
+        // 注册组件
+        const TodoList = {
+            data() {
+                return {
+                    groceryList: [
+                        { id: 0, text: "Vegetables" },
+                        { id: 1, text: "Cheese" },
+                        { id: 2, text: "Whatever" }
+                    ]
+                }
+            }
+        }
+        const app = Vue.createApp(TodoList)
+
+        // 将应用分割成了两个更小的单元, 子单元通过props接口与父单元进行了解耦
+        app.component("todo-item", {
+            props: ["todo"],
+            template: "<li>{{todo.text}}</li>"
+        })
+        app.mount("#todo-list-app")
+        
 
     </script>
 </body>
