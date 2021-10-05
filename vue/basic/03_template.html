@@ -63,12 +63,21 @@
         <!-- 动态参数 -->
         <a v-on:[eventName]="handle">当eventName的值为"focus"时, v-on:[eventName]将等价于v-on:focus</a>
 
-        <!-- 修饰符 -->
-        
+        <!-- 修饰符 .出来修饰符, 用于指出一个指令应该以特殊方式绑定-->
+        <!-- .prevent修饰符告诉 v-on指令对于触发的事件调用event.preventDefault()-->
+        <from v-on:submit.prevent="onSubmit">...</from>
 
     </div>
 
+    <!-- v-bind 缩写 -->
+    <a v-bind:href="www.google.com">谷歌</a>
+    <a :href="www.baidu.com">百度</a>
+    <a :[href]="www.zhihu.com">知乎</a>
     
+    <!-- v-on 缩写 -->
+    <a v-on:click="doSomething">...</a>
+    <a @click="doSomething">...</a>
+    <a @[event]="doSomething">...</a>
 
     <!-- ------------------------------------------------------------------------------------------------------- -->
 
