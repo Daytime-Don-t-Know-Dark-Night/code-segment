@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Hello World</title>
+
+    <style>
+        .demo {
+            font-family: sans-serif;
+            border: 1px solid #eee;
+            border-radius: 2px;
+            padding: 20px 30px;
+            margin-top: 1em;
+            margin-bottom: 40px;
+            user-select: none;
+            overflow-x: auto;
+        }
+    </style>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script>
+</head>
+
+<body>
+
+    <!-- hello world -->
+    <div id="app" class="demo">
+        {{ count }}
+    </div>
+
+    <div id="app1" class="demo">
+        {{ count }}
+        <button @click="increment">Up vote</button>
+
+        <!-- <span :title="toTitleDate(date)">
+            {{ formatDate(date)}}
+        </span> -->
+
+    </div>
+
+    <div id="app2" class="demo">
+        <button @click="debounce">防抖函数</button>
+    </div>
+
+    
+
+    <!-- ******************************************************************************************************** -->
+
+    <script>
+
+        // 组件的data选项是一个函数, Vue在创建新组件实例的过程中调用此函数
+        // Vue将其返回的对象包裹起来, 以 '$data' 的形式存储在组件实例中
+        const app = Vue.createApp({
+            data() {
+                return { count: 4 }
+            }
+        })
+
+        const vm = app.mount('#app')
+
+        console.log(vm.$data.count) // => 4
+        console.log(vm.count)       // => 4
+
+        // 修改 vm.count 的值也会更新 $data.count
+        vm.count = 5
+        console.log(vm.$data.count)
+
+        // 反之亦然
+        vm.$data.count = 6
+        console.log(vm.count)
+
+        console.log("*********************************************************************************************")
+
+        // 用 menthod选项向组件中添加方法
+        const app1 = Vue.createApp({
+            data() {
+                return { count: 4 }
+            },
+            methods: {
+                increment() {
+                    this.count++
+                }
+            }
+        })
+
+        const vm1 = app1.mount("#app1")
+        console.log(vm1.count)
+
+        vm1.increment()
+        console.log(vm1.count)
+
+        // 防抖函数
+        Vue.createApp({
+            methods: {
+                // use Loadsh 防抖函数
+                click: _.debounce(function() {
+                    console.log("防抖函数")
+                }, 500)
+            }
+        }).mount("#app2")
+
+        
+
+    </script>
+</body>
+
+</html>
