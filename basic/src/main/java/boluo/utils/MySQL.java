@@ -9,19 +9,26 @@ import org.apache.spark.sql.execution.datasources.jdbc.JdbcUtils;
 import org.apache.spark.sql.jdbc.JdbcDialect;
 import org.apache.spark.sql.jdbc.JdbcDialects;
 import org.apache.spark.sql.types.StructType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Option;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.sql.*;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MySQL {
 
+	private static final Logger logger = LoggerFactory.getLogger(MySQL.class);
+
 	public static void replace(Dataset<Row> ds, JdbcOptionsInWrite opts, String where) throws SQLException, ExecutionException, SparkException, InvocationTargetException {
 
 		JdbcDialect dialect = JdbcDialects.get(opts.url());
+		long max_allowed_packet = 4 * 1024 * 1024;
+		long buffer_pool_size = 128 * 1024 * 1024;
 
 		try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
 			 Statement statement = conn.createStatement()) {
@@ -35,6 +42,18 @@ public class MySQL {
 				statement.executeUpdate(sql);
 				System.out.println(sql);
 			}
+
+			try (ResultSet packetRes = statement.executeQuery("show global variables like 'max_allowed_packet'")) {
+				while (packetRes.next()) {
+					max_allowed_packet = packetRes.getLong("Value");
+				}
+			}
+
+			try (ResultSet bufferRes = statement.executeQuery("show global variables like 'innodb_buffer_pool_size'")) {
+				while (bufferRes.next()) {
+					buffer_pool_size = bufferRes.getLong("Value");
+				}
+			}
 		}
 
 		StructType schema = ds.schema();
@@ -44,70 +63,57 @@ public class MySQL {
 		String prev = sql_.substring(0, sql_.indexOf("(?"));
 		sb.append(prev);
 
+		long partNum = Math.round(0.9 * max_allowed_packet);
+		long commitCount = buffer_pool_size / max_allowed_packet;
+
 		ds.foreachPartition((rows) -> {
 
-			Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
-			conn.setAutoCommit(false);
+			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
+				 Statement statement = conn.createStatement()) {
 
-			PreparedStatement packetStmt = conn.prepareStatement("show global variables like 'max_allowed_packet'");
-			PreparedStatement bufferStmt = conn.prepareStatement("show global variables like 'innodb_buffer_pool_size'");
-			ResultSet packetRes = packetStmt.executeQuery();
-			ResultSet bufferRes = bufferStmt.executeQuery();
+				conn.setAutoCommit(false);
 
-			long max_allowed_packet = 4 * 1024 * 1024;
-			long buffer_pool_size = 128 * 1024 * 1024;
+				int numFields = schema.fields().length;
+				int partCount = 0, executeCount = 0, sumCount = 0;
 
-			while (packetRes.next()) {
-				max_allowed_packet = packetRes.getLong("Value");
-			}
-			while (bufferRes.next()) {
-				buffer_pool_size = bufferRes.getLong("Value");
-			}
+				while (rows.hasNext()) {
+					Row row = rows.next();
+					StringBuilder group = new StringBuilder("(");
+					for (int i = 0; i < numFields; i++) {
+						Object tmp = row.getAs(i);
+						group.append(String.format("'%s',", tmp));
+					}
+					group.delete(group.length() - 1, group.length());
+					group.append("),");
+					sb.append(group);
 
-			long partNum = Math.round(1.0 * buffer_pool_size / max_allowed_packet);
-			long commitCount = Math.round(0.9 * max_allowed_packet);
+					partCount++;
+					if (sb.length() >= partNum) {
+						String ex_sql = StringUtils.chop(sb.toString());
+						statement.executeUpdate(ex_sql);
+						sb.delete(0, sb.length());
+						sb.append(prev);
+						partCount = 0;
+						executeCount++;
+						logger.info("execute执行次数: {}", sumCount++);
+					}
 
-			int numFields = schema.fields().length;
-			int count1 = 0, count2 = 0;
-
-			while (rows.hasNext()) {
-				Row row = rows.next();
-				StringBuilder group = new StringBuilder("(");
-				for (int i = 0; i < numFields; i++) {
-					Object tmp = row.getAs(i);
-					group.append(String.format("'%s',", tmp));
+					if (executeCount >= commitCount) {
+						logger.info("commit执行时间: {}", Instant.now());
+						conn.commit();
+						executeCount = 0;
+					}
 				}
-				group.delete(group.length() - 1, group.length());
-				group.append("),");
-				sb.append(group);
 
-				count1++;
-				count2++;
-				if (count1 % partNum == 0) {
+				// 剩余数量不足partNum的
+				if (partCount > 0) {
 					String ex_sql = StringUtils.chop(sb.toString());
-					PreparedStatement preparedStatement = conn.prepareStatement(ex_sql);
-					preparedStatement.executeUpdate();
-					sb.delete(0, sb.length());
-					sb.append(prev);
-					count1 = 0;
+					statement.executeUpdate(ex_sql);
 				}
-
-				long rowLen = Math.round(count2 * group.toString().getBytes().length);
-				if (rowLen >= commitCount) {
-					System.out.println("执行次数: ");
-					conn.commit();
-					count2 = 0;
-				}
+				conn.commit();
 			}
-
-			// 剩余数量不足partNum的
-			if (count1 > 0) {
-				String ex_sql = StringUtils.chop(sb.toString());
-				PreparedStatement preparedStatement = conn.prepareStatement(ex_sql);
-				preparedStatement.executeUpdate();
-			}
-			// conn.commit();
 
 		});
 	}
 }
+
