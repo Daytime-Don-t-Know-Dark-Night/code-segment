@@ -14,10 +14,27 @@ public class LeetCode83 {
 		node.next = new ListNode(1);
 		node.next.next = new ListNode(2);
 
+		deleteDuplicates(node);
 		System.out.println(node);
 	}
 
 	public static ListNode deleteDuplicates(ListNode head) {
-		throw new UnsupportedOperationException();
+
+		if (head == null) {
+			return null;
+		}
+
+		// 我们将指针curr指向链表的头结点, 随后对链表进行遍历
+		ListNode curr = head;
+		while (curr.next != null) {
+			// 如果当前节点元素与下一节点元素相同, 则将下一节点元素删除
+			if (curr.val == curr.next.val) {
+				curr.next = curr.next.next;
+			} else {
+				curr = curr.next;
+			}
+		}
+
+		return head;
 	}
 }
