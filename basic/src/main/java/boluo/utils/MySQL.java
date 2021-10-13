@@ -1,5 +1,6 @@
 package boluo.utils;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.SparkException;
 import org.apache.spark.sql.Dataset;
@@ -8,6 +9,8 @@ import org.apache.spark.sql.execution.datasources.jdbc.JdbcOptionsInWrite;
 import org.apache.spark.sql.execution.datasources.jdbc.JdbcUtils;
 import org.apache.spark.sql.jdbc.JdbcDialect;
 import org.apache.spark.sql.jdbc.JdbcDialects;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.sql.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -59,18 +63,20 @@ public class MySQL {
 		StructType schema = ds.schema();
 		String sql_ = JdbcUtils.getInsertStatement(opts.table(), schema, Option.empty(), true, dialect);
 
+		// sql拼接时不使用''的类型
+		List<DataType> specialType = ImmutableList.of(DataTypes.BooleanType);
+
 		StringBuilder sb = new StringBuilder();
 		String prev = sql_.substring(0, sql_.indexOf("(?"));
 		sb.append(prev);
 
-		long partNum = Math.round(0.9 * max_allowed_packet);
+		long partNum = Math.round(0.7 * max_allowed_packet);
 		long commitCount = buffer_pool_size / max_allowed_packet;
 
 		ds.foreachPartition((rows) -> {
 
 			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
 				 Statement statement = conn.createStatement()) {
-
 				conn.setAutoCommit(false);
 
 				int numFields = schema.fields().length;
@@ -80,8 +86,23 @@ public class MySQL {
 					Row row = rows.next();
 					StringBuilder group = new StringBuilder("(");
 					for (int i = 0; i < numFields; i++) {
-						Object tmp = row.getAs(i);
-						group.append(String.format("'%s',", tmp));
+						DataType type = schema.apply(i).dataType();
+
+						if (row.isNullAt(i)) {
+							// null值处理
+							group.append("null,");
+						} else if (specialType.contains(type)) {
+							// 判断该类型数据是否需要''
+							Object tmp = row.getAs(i);
+							group.append(String.format("%s,", tmp));
+						} else if (type == DataTypes.StringType) {
+							// 如果该类型为字符串类型且包含', 则对'进行转义
+							String tmp = row.getAs(i);
+							group.append(String.format("'%s',", tmp.replaceAll("'", "''")));
+						} else {
+							Object tmp = row.getAs(i);
+							group.append(String.format("'%s',", tmp));
+						}
 					}
 					group.delete(group.length() - 1, group.length());
 					group.append("),");
