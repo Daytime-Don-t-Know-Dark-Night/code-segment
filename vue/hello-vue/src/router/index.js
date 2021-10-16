@@ -16,13 +16,22 @@ export default new Router({
             component: Main,
             // 嵌套子路由
             children: [
-                {path: '/user/profile', component: UserProfile},
+                {
+                    path: '/user/profile/:id',
+                    name: 'UserProfile',
+                    component: UserProfile,
+                    props: true
+                },
                 {path: '/user/list', component: UserList}
             ]
         },
         {
             path: '/login',
             component: Login
+        },
+        {
+            path: '/goHome',
+            redirect: '/main'
         }
     ]
 });
