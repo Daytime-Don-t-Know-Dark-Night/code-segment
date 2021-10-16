@@ -1,0 +1,25 @@
+{
+    "name": "Java",
+    "url": "https://www.todo.com",
+    "page": 1,
+    "isNonProfit": true,
+    "address": {
+        "street": "卢浮宫",
+        "city": "巴黎",
+        "county": "法国"
+    },
+    "links": [
+        {
+            "name": "bilibili",
+            "url": "https://www.bilibili.com"
+        },
+        {
+            "name": "zhihu",
+            "url": "https://www.zhihu.com"
+        },
+        {
+            "name": "sifou",
+            "url": "https://www.sifou.com"
+        }
+    ]
+}
