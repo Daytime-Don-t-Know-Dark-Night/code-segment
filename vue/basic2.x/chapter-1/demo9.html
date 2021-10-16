@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插槽</title>
+</head>
+<body>
+
+要实现效果:
+<div>
+    <div>学习系列课程</div>
+    <ul>
+        <li>Java</li>
+        <li>Python</li>
+        <li>Scala</li>
+    </ul>
+</div>
+
+<hr/><!---------------------------------------------------------------------------------------------------------------->
+
+<div id="app">
+    <todo>
+        <todo-title slot="todo-title" :title="title_data"></todo-title>
+        <todo-items slot="todo-items" v-for="item in todoItems_data" :item="item"></todo-items>
+    </todo>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.min.js"></script>
+<script>
+
+    // slot: 插槽
+    Vue.component("todo", {
+        template: "<div>\
+                       <slot name='todo-title'></slot>\
+                       <ul>\
+                           <slot name='todo-items'></slot>\
+                       </ul>\
+                   </div>"
+    });
+
+    Vue.component("todo-title", {
+        props: ["title"],
+        template: "<div>{{title}}</div>"
+    });
+    Vue.component("todo-items", {
+        props: ["item"],
+        template: "<li>{{item}}</li>"
+    })
+
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            title_data: "学习系列课程",
+            todoItems_data: ["Java", "Python", "Scala"]
+        }
+    });
+</script>
+</body>
+</html>
