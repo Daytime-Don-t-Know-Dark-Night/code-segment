@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>axios</title>
+
+    <!-- v-clock: 解决闪烁问题 -->
+    <style>
+        [v-clock] {
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="app" v-clock>
+    <div>{{info.name}}</div>
+    <div>{{info.address.city}}</div>
+
+    <a v-bind:href="info.url">点我</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+
+    var vm = new Vue({
+        el: "#app",
+        data() {
+            return {
+                // 这里规定请求的返回参数格式, 必须和json字符串保持一致
+                info: {
+                    name: null,
+                    address: {
+                        street: null,
+                        city: null,
+                        country: null
+                    },
+                    url: null
+                }
+            }
+        },
+        mounted() {
+            // 钩子函数
+            axios.get("../data.json").then(response => (
+                // console.log(response.data)
+                // 在这里把取到的值赋给data()
+                this.info = response.data
+            ));
+        }
+    })
+
+</script>
+
+</body>
+</html>
