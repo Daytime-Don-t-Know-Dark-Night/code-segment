@@ -21,7 +21,8 @@
 <div id="app">
     <todo>
         <todo-title slot="todo-title" :title="title_data"></todo-title>
-        <todo-items slot="todo-items" v-for="item in todoItems_data" :item="item"></todo-items>
+        <todo-items slot="todo-items" v-for="(item, idx) in todoItems_data"
+                    :item="item" :index="idx" v-on:remove="removeItems(idx)" :key="idx"></todo-items>
     </todo>
 </div>
 
@@ -43,8 +44,16 @@
         template: "<div>{{title}}</div>"
     });
     Vue.component("todo-items", {
-        props: ["item"],
-        template: "<li>{{item}}</li>"
+        props: ["item", "index"],
+        // 只能绑定当前组件的方法
+        template: "<li>{{item}}---{{index}} <button @click='remove'>删除</button></li>",
+        methods: {
+            remove: function (param) {
+                // 调用自定义组件
+                console.log("调用了item组件, 参数为: " + param)
+                this.$emit("remove", param);
+            }
+        }
     })
 
     var vm = new Vue({
@@ -52,6 +61,12 @@
         data: {
             title_data: "学习系列课程",
             todoItems_data: ["Java", "Python", "Scala"]
+        },
+        methods: {
+            removeItems: function (index) {
+                console.log("删除了" + this.todoItems_data[index] + "OK!");
+                this.todoItems_data.splice(index, 1);
+            }
         }
     });
 </script>
