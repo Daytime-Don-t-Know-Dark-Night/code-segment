@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>if</title>
+</head>
+<body>
+
+<div id="app">
+    <h1 v-if="type ==='A'">A</h1>
+    <h1 v-else-if="type ==='B'">B</h1>
+    <h1 v-else-if="type ==='C'">C</h1>
+    <h1 v-else>D</h1>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.min.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            type: 'B'
+        }
+    });
+</script>
+</body>
+</html>

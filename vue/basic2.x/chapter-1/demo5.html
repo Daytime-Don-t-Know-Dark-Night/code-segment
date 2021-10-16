@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>双向绑定</title>
+</head>
+<body>
+
+<div id="app">
+    输入的文本: <input type="text" v-model="message"> {{message}}
+
+    <hr/><!------------------------------------------------------------------------------------------------------------>
+
+    <input type="radio" name="sex" value="男" v-model="radio">男
+    <input type="radio" name="sex" value="女" v-model="radio">女
+    <p>
+        选中了谁: {{radio}}
+    </p>
+
+    <hr/><!------------------------------------------------------------------------------------------------------------>
+
+    下拉框:
+    <select v-model="select">
+        <option value="" disabled>请选择</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+    </select>
+    <br/>
+    <span>value: {{select}}</span>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.min.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            message: "Java",
+            radio: "",
+            select: ""
+        }
+    });
+</script>
+</body>
+</html>
