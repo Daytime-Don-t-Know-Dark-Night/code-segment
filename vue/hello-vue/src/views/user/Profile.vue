@@ -15,8 +15,10 @@ export default {
     // 进入路由前后的钩子函数
     beforeRouteEnter: (to, from, next) => {
         console.log("进入路由之前...加载数据");
-
-        next();
+        next(vm => {
+            // 进入路由之前, 获取数据
+            vm.getData()
+        });
     },
     beforeRouteLeave: (to, from, next) => {
         console.log("进入路由之后...");
@@ -24,7 +26,13 @@ export default {
     },
     methods: {
         getData: function () {
-
+            console.log("获取数据....")
+            this.axios({
+                method: "GET",
+                url: "http://localhost:8080/static/mock/data.json"
+            }).then(function (response) {
+                console.log(response)
+            })
         }
     }
 }
