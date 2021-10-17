@@ -6,13 +6,17 @@ import Login from "../views/Login";
 
 import UserList from "../views/user/List";
 import UserProfile from "../views/user/Profile";
+import NotFound from "../views/NotFound";
 
 Vue.use(Router);
 
 export default new Router({
+    mode: "history",
     routes: [
         {
-            path: '/main',
+            path: '/main/:name',
+            props: true,
+            // 登录经过路由会跳转到Main.vue
             component: Main,
             // 嵌套子路由
             children: [
@@ -32,6 +36,10 @@ export default new Router({
         {
             path: '/goHome',
             redirect: '/main'
+        },
+        {
+            path: '*',
+            component: NotFound
         }
     ]
 });
