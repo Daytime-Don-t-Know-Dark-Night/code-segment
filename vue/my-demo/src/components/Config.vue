@@ -42,6 +42,20 @@
             </el-table-column>
         </el-table>
 
+        <el-switch
+            v-model="value1"
+            active-text="按月付费"
+            inactive-text="按年付费">
+        </el-switch>
+        <el-switch
+            style="display: block"
+            v-model="value2"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="按月付费"
+            inactive-text="按年付费">
+        </el-switch>
+
     </div>
 </template>
 
@@ -73,7 +87,9 @@ export default {
                 name: '王小虎',
                 address: '上海市普陀区金沙江路 1516 弄',
                 tag: '公司'
-            }]
+            }],
+            value1: true,
+            value2: true
         }
     },
     methods: {
