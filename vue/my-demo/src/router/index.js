@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from '@/components/Home'
-import Config from '@/components/Config'
-import Application from '@/components/Application'
+import Config from '../components/Config'
+import Application from '../components/Application'
 
 Vue.use(Router)
 
