@@ -5,32 +5,33 @@
             <el-aside width="200px">
 
                 <el-menu router
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-                    @open="handleOpen"
-                    @close="handleClose"
-                    background-color="#545c64"
-                    text-color="#fff"
-                    active-text-color="#ffd04b">
+                         default-active="2"
+                         class="el-menu-vertical-demo"
+                         @open="handleOpen"
+                         @close="handleClose"
+                         background-color="#545c64"
+                         text-color="#fff"
+                         active-text-color="#ffd04b">
+
                     <el-submenu index="1">
                         <template slot="title">
                             <i class="el-icon-location"></i>
                             <span>导航一</span>
                         </template>
-
                         <el-menu-item index="/index">选项1</el-menu-item>
                         <el-menu-item index="1-2">选项2</el-menu-item>
-                        <el-menu-item index="1-3">选项3</el-menu-item>
-
                     </el-submenu>
+
                     <el-menu-item index="/application">
                         <i class="el-icon-menu"></i>
                         <span slot="title">应用管理</span>
                     </el-menu-item>
+
                     <el-menu-item index="/config">
                         <i class="el-icon-document"></i>
                         <span slot="title">配置管理</span>
                     </el-menu-item>
+
                     <el-submenu index="4">
                         <template slot="title">
                             <i class="el-icon-setting"></i>
@@ -38,15 +39,14 @@
                         </template>
                         <el-menu-item index="1-1">选项1</el-menu-item>
                         <el-menu-item index="1-2">选项2</el-menu-item>
-                        <el-menu-item index="1-3">选项3</el-menu-item>
                     </el-submenu>
+
                 </el-menu>
 
             </el-aside>
             <el-container>
                 <el-header>{{ msg }}</el-header>
                 <el-main>
-                    Main
                     <router-view></router-view>
                 </el-main>
             </el-container>
@@ -61,7 +61,7 @@ export default {
     name: 'HelloWorld',
     data() {
         return {
-            msg: '测试标题666, P2-52min',
+            msg: '菠萝吹雪',
             isCollapse: true
         };
     },
