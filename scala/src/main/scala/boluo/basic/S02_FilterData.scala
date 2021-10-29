@@ -82,6 +82,11 @@ object S02_FilterData {
         // |002|35    |账户1  |002   |-35       |
         // +---+------+-------+------+----------+
 
+        val tmpDs = totalDs.groupBy("account")
+            .agg(max("pay_no").as("flag"))
+            .where("flag is not null")
+            .show(false)
+
         totalDs = totalDs
             .withColumn("flag", expr("if(pay_no is null, 0, 1)"))
             .withColumn("account_num", expr("sum(flag) over(partition by account)"))
