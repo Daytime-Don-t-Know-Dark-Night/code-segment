@@ -8,8 +8,7 @@ public class ThreadCommunication {
 	private static Logger logger = LoggerFactory.getLogger(ThreadCommunication.class);
 
 	public static void main(String[] args) {
-		// https://mp.weixin.qq.com/s/bTfGYA1fSlniHieThANkzQ
-		// TODO
+		// TODO https://mp.weixin.qq.com/s/bTfGYA1fSlniHieThANkzQ
 		// 正常情况下, 每个子线程完成各自的任务就可以结束了, 但是希望多个线程协同工作来完成某个任务时, 就涉及到线程间通信
 
 		// 两个线程分别打印123三个数字, 此时A和B是同时打印的
