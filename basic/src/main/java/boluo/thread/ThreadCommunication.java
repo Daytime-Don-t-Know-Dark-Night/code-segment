@@ -16,6 +16,9 @@ public class ThreadCommunication {
 
 		// 如果我们希望B在A全部打印完之后再开始打印, 可以利用thread.join()方法
 		demo2();
+
+		// 如果我们希望A打印完1之后, 再让B打印1,2,3, 最后A再继续打印2,3
+
 	}
 
 	private static void demo1() {
@@ -30,6 +33,7 @@ public class ThreadCommunication {
 		Thread B = new Thread(() -> {
 			logger.info("B开始等待A");
 			try {
+				// 我们可以看到A.join()方法会让线程B一直等待到线程A运行完毕
 				A.join();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -39,6 +43,16 @@ public class ThreadCommunication {
 
 		B.start();
 		A.start();
+	}
+
+	private static void demo3() {
+		Object lock = new Object();
+		Thread A = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				throw new UnsupportedOperationException();
+			}
+		});
 	}
 
 	private static void printNumber(String threadName) {
