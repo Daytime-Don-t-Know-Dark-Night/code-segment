@@ -54,12 +54,11 @@ public class InvokeTest {
 		Method m1 = Class.forName("boluo.reflex.Target1").getDeclaredMethod("func11");
 		Assert.assertEquals("func11", m1.getName());
 
-		//
 		Target1 t1 = new Target1();
-		// TODO
-		Object obj = m1.invoke(t1, "dingc", "qidai");
+		Method m3 = Class.forName("boluo.reflex.Target1").getMethod("func13", String.class);
+		Object obj = m3.invoke(t1, "dingc");
 		String res = String.valueOf(obj);
-		Assert.assertEquals(res, "dingc");
+		Assert.assertEquals(res, "dingc: invoke");
 	}
 
 	@Test
