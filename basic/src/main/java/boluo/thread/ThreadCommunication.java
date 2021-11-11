@@ -15,10 +15,10 @@ public class ThreadCommunication {
 		// demo1();
 
 		// 如果我们希望B在A全部打印完之后再开始打印, 可以利用thread.join()方法
-		demo2();
+		// demo2();
 
-		// 如果我们希望A打印完1之后, 再让B打印1,2,3, 最后A再继续打印2,3
-
+		// 如果我们希望A打印完1之后, 再让B打印1,2,3, 最后A再继续打印2,3 我们需要更细粒度的锁来控制执行顺序
+		demo3();
 	}
 
 	private static void demo1() {
@@ -47,10 +47,24 @@ public class ThreadCommunication {
 
 	private static void demo3() {
 		Object lock = new Object();
-		Thread A = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				throw new UnsupportedOperationException();
+		Thread A = new Thread(() -> {
+			synchronized (lock) {
+				System.out.println("A 1");
+				try {
+					lock.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				System.out.println("A 2");
+				System.out.println("A 3");
+			}
+		});
+
+		Thread B = new Thread(() -> {
+			synchronized (lock) {
+				System.out.println("B 1");
+				System.out.println("B 2");
+				System.out.println("B 3");
 			}
 		});
 	}
