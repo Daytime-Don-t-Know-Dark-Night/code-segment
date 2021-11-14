@@ -157,7 +157,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.2.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.2.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.2.6.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.44" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.16" level="project" />
     <orderEntry type="library" name="Maven: org.apache.spark:spark-avro_2.11:2.4.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hudi:hudi-spark-bundle_2.11:0.5.3" level="project" />
     <orderEntry type="library" name="Maven: com.github.fge:json-patch:1.9" level="project" />
