@@ -189,6 +189,11 @@ public class YouData {
 
 						// 建表
 						String newTableName = "测试建表" + partSuffix(tmpPartNum);
+
+						// 如果有该表则将该表中的数据清空
+						String drop_table = String.format("drop table if exists %s", newTableName);
+						statement.executeUpdate(drop_table);
+
 						String create_table = String.format("create table if not exists %s(%s)", newTableName, col_sql);
 						statement.executeUpdate(create_table);
 
