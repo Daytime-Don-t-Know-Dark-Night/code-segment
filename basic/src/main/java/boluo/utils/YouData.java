@@ -29,6 +29,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.DefaultCookieSpec;
 import org.apache.http.message.BasicHeader;
+import org.apache.spark.SparkContext;
 import org.apache.spark.SparkException;
 import org.apache.spark.scheduler.SparkListener;
 import org.apache.spark.scheduler.SparkListenerTaskEnd;
@@ -88,9 +89,9 @@ public class YouData {
 
 	public static void replace(Dataset<Row> ds, String uri, JdbcOptionsInWrite opts, Column part) throws SQLException, ExecutionException, SparkException, InvocationTargetException {
 
-		final double commit_count = 1.7;
-		final double max_allowed_count = 0.95;
-		final double max_memory_count = 0.7;
+		final double commit_factor = 0.1;
+		final double max_allowed_factor = 0.3;
+		final double max_memory_factor = 0.1;
 
 		JdbcDialect dialect = JdbcDialects.get(opts.url());
 		long max_allowed_packet = 4 * 1024 * 1024;
@@ -98,10 +99,6 @@ public class YouData {
 
 		try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
 			 Statement statement = conn.createStatement()) {
-
-			String sql = String.format("truncate table %s", opts.table());
-			statement.executeUpdate(sql);
-			System.out.println(sql);
 
 			try (ResultSet packetRes = statement.executeQuery("show global variables like 'max_allowed_packet'")) {
 				while (packetRes.next()) {
@@ -126,18 +123,18 @@ public class YouData {
 		MemoryUsage memoryUsage = memoryMXBean.getHeapMemoryUsage(); //堆内存使用情况
 		long maxMemorySize = memoryUsage.getMax(); //最大可用内存
 
-		long partNum = Math.min(Math.round(max_allowed_count * max_allowed_packet), Math.round(maxMemorySize * max_memory_count));
-		long commitCount = Math.round(commit_count * buffer_pool_size);
+		SparkContext sparkContext = ds.sparkSession().sparkContext();
+		int cores = sparkContext.defaultParallelism();
+		int executorNum = sparkContext.getExecutorIds().size() + 1;
 
-		// 得到一个事件, 触发两次,
-		// CollectAcc
-		//
-//		()->{
-//			//...
-//			System.out.println("");
-//		};
+		long partNum = Math.min(
+				Math.round(max_allowed_packet * max_allowed_factor),
+				Math.round(maxMemorySize * max_memory_factor * executorNum / cores) / 5		// TODO
+		);
+		long bufferLength = Math.round(buffer_pool_size * commit_factor);
+		Preconditions.checkArgument(partNum > 0, "partNum计算值<=0");
 
-		Set<Object> lastSet = Sets.newHashSet();
+		Set<Object> lastSet = Sets.newConcurrentHashSet();
 		SetAccumulator<Object> collectionAc = new SetAccumulator<>();
 		collectionAc.register(SparkSession.active().sparkContext(), Option.apply("setAc"), false);
 		SparkSession.active().sparkContext().addSparkListener(new SparkListener() {
@@ -148,7 +145,6 @@ public class YouData {
 
 				Set<Object> diffSet = Sets.difference(collectionAc.value(), lastSet);
 				if (!diffSet.isEmpty()) {
-					// diffSet.forEach(i-> System.out.println("监听器检测到差异..." + i));
 					System.out.println("监听器检测到差异..." + diffSet);
 					lastSet.addAll(collectionAc.value());
 				}
@@ -160,102 +156,106 @@ public class YouData {
 				.sortWithinPartitions(col("partNum"));
 
 		ds.foreachPartition(rows -> {
-
 			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
 				 Statement statement = conn.createStatement()) {
 				conn.setAutoCommit(false);
 
 				int numFields = schema.fields().length;
-				int partCount = 0, executeCount = 0, sumCount = 0;
+				int executeLength = 0;
+				StringBuilder sb = null;
+				String sqlPrefix = null;
 
-				StringBuilder sb = new StringBuilder((int) partNum + 1000);
-				String prev = sql_.substring(0, sql_.indexOf("(?"));
-				sb.append(prev);
-
-				Object a = null;
+				Object lastPartNum = null;
 				while (rows.hasNext()) {
 					Row row = rows.next();
-
-					// 如果本行数据和上一行数据在同一张表, 直接插入数据
-					// 如果本行数据和上一行数据不在同一张表, 提交上一次数据, 建表, 插入数据
+					// 如果本行数据和上一行数据在同一张表, 直接插入数据, 如果本行数据和上一行数据不在同一张表, 提交上一次数据, 建表, 插入数据
 					Object tmpPartNum = row.getAs("partNum");
-					if (!Objects.equals(tmpPartNum, a)) {
-						System.out.println("差异---");
+					Preconditions.checkArgument(Objects.nonNull(tmpPartNum));
 
-						conn.commit();
+					if (!Objects.equals(tmpPartNum, lastPartNum)) {
 
-						// 建表
-						String col_sql = tableCol(row, opts);
-
-						// 建表
-						String newTableName = "测试建表" + partSuffix(tmpPartNum);
+						System.out.println("本次与上次partNum有差异---");
+						String newTableName = opts.table() + partSuffix(tmpPartNum);
 
 						// 如果有该表则将该表中的数据清空
 						String drop_table = String.format("drop table if exists %s", newTableName);
 						statement.executeUpdate(drop_table);
 
-						String create_table = String.format("create table if not exists %s(%s)", newTableName, col_sql);
+						// 建表
+						String col_sql = tableCol(row, opts);
+						String create_table = String.format("create table if not exists %s(%s) DEFAULT CHARSET=utf8mb4", newTableName, col_sql);
 						statement.executeUpdate(create_table);
+						sqlPrefix = sql_.substring(0, sql_.indexOf("(?"));
+						// 替换表名
+						sqlPrefix = sqlPrefix.replace(sqlPrefix.substring(12, sqlPrefix.indexOf("(")), newTableName);
 
-						sb.replace(12, 20, newTableName);
+						if (!Objects.isNull(lastPartNum)) {
+							// 记录执行掉的sql的长度
+							executeLength += sb.length();
+							statement.executeUpdate(sb.substring(0, sb.length() - 1));
+							sb.setLength(0);
+							sb.append(sqlPrefix);
+						} else {
+							sb = new StringBuilder((int) partNum + 1000);
+							sb.append(sqlPrefix);
+						}
+
 						collectionAc.add(tmpPartNum);
-						a = tmpPartNum;
+						lastPartNum = tmpPartNum;
 					}
 
 					StringBuilder group = new StringBuilder("(");
 					for (int i = 0; i < numFields; i++) {
 						DataType type = schema.apply(i).dataType();
-
 						if (row.isNullAt(i)) {
 							// null值处理
 							group.append("null,");
 						} else if (specialType.contains(type)) {
 							// 判断该类型数据是否需要''
 							Object tmp = row.getAs(i);
-							group.append(String.format("%s,", tmp));
+							group.append(tmp).append(',');
 						} else if (type == DataTypes.StringType) {
 							// 如果该类型为字符串类型且包含', 则对'进行转义
 							String tmp = row.getAs(i);
-							group.append(String.format("'%s',", tmp.replaceAll("'", "''")));
+							group.append("'").append(tmp.replaceAll("'", "''")).append("',");
 						} else {
 							Object tmp = row.getAs(i);
-							group.append(String.format("'%s',", tmp));
+							group.append("'").append(tmp).append("',");
 						}
 					}
 					group.delete(group.length() - 1, group.length());
 					group.append("),");
 					sb.append(group);
 
-					partCount++;
 					if (sb.length() >= partNum) {
-						executeCount += sb.length();    // 每执行一次, 累计 + sb.length
-						String ex_sql = sb.substring(0, sb.length() - 1);
-						statement.executeLargeUpdate(ex_sql);
+						executeLength += sb.length();    // 每执行一次, 累计 + sb.length
+						statement.executeLargeUpdate(sb.substring(0, sb.length() - 1));
 						sb.setLength(0);
-						sb.append(prev);
-						logger.info("execute执行次数: {}, 本次执行提交行数: {}", sumCount, partCount);
-						sumCount++;
-						partCount = 0;
+						sb.append(sqlPrefix);
 					}
 
 					// 上面每执行一次, 累计 + max_allowed_packet, 累计加到缓冲池的70%, 提交
-					if (executeCount >= commitCount) {
+					if (executeLength >= bufferLength) {
 						logger.info("commit执行时间: {}", Instant.now());
 						conn.commit();
-						executeCount = 0;
+						executeLength = 0;
 					}
-
 				}
 
-				// 剩余数量不足partNum的
-				if (partCount > 0) {
+				// 剩余还有未被执行的数据
+				if (Objects.nonNull(sb) && sb.length() > sqlPrefix.length()) {
 					String ex_sql = sb.substring(0, sb.length() - 1);
 					statement.executeUpdate(ex_sql);
-					logger.info("剩余数量不足partNum的: {}", partCount);
+					sb.setLength(0);
+					sb.append(sqlPrefix);
+					logger.info("剩余数量不足partNum的提交");
 				}
-				conn.commit();
+				{
+					logger.info("commit执行时间: {}", Instant.now());
+					conn.commit();
+					executeLength = 0;
+				}
 			}
-
 
 		});
 	}
