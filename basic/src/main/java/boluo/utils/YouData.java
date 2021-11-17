@@ -1,34 +1,8 @@
 package boluo.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
-import com.google.common.io.CharStreams;
-import com.google.common.util.concurrent.Uninterruptibles;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.compress.utils.Charsets;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Header;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.DateUtils;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.cookie.CookieOrigin;
-import org.apache.http.cookie.CookieSpecProvider;
-import org.apache.http.cookie.MalformedCookieException;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.cookie.DefaultCookieSpec;
-import org.apache.http.message.BasicHeader;
 import org.apache.spark.SparkContext;
 import org.apache.spark.SparkException;
 import org.apache.spark.scheduler.SparkListener;
@@ -45,29 +19,14 @@ import org.apache.spark.sql.jdbc.JdbcDialects;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.util.CollectionAccumulator;
-import org.apache.spark.util.LongAccumulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Option;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.InvocationTargetException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -77,9 +36,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.apache.spark.sql.functions.*;
 
@@ -129,31 +85,40 @@ public class YouData {
 
 		long partNum = Math.min(
 				Math.round(max_allowed_packet * max_allowed_factor),
-				Math.round(maxMemorySize * max_memory_factor * executorNum / cores) / 5		// TODO
+				Math.round(maxMemorySize * max_memory_factor * executorNum / cores)
 		);
 		long bufferLength = Math.round(buffer_pool_size * commit_factor);
 		Preconditions.checkArgument(partNum > 0, "partNum计算值<=0");
 
-		Set<Object> lastSet = Sets.newConcurrentHashSet();
+		Set<Object> lastSet = Sets.newHashSet();
 		SetAccumulator<Object> collectionAc = new SetAccumulator<>();
 		collectionAc.register(SparkSession.active().sparkContext(), Option.apply("setAc"), false);
 		SparkSession.active().sparkContext().addSparkListener(new SparkListener() {
 
-			public void onTaskEnd(SparkListenerTaskEnd taskEnd) {
-				// 上次set中的值 lastSet
-				// 本次set中的值 collectionAc.value()
-
-				Set<Object> diffSet = Sets.difference(collectionAc.value(), lastSet);
-				if (!diffSet.isEmpty()) {
-					System.out.println("监听器检测到差异..." + diffSet);
-					lastSet.addAll(collectionAc.value());
+			public synchronized void onTaskEnd(SparkListenerTaskEnd taskEnd) {
+				// 上次set中的值 lastSet, 本次set中的值 collectionAc.value()
+				synchronized (lastSet) {
+					Set<Object> diffSet;
+					synchronized (collectionAc.value()) {
+						diffSet = Sets.difference(collectionAc.value(), lastSet).immutableCopy();
+					}
+					if (!diffSet.isEmpty()) {
+						for (Object i : diffSet) {
+							System.out.println("监听器检测到差异..." + i);
+						}
+						lastSet.addAll(diffSet);
+					}
 				}
 			}
 		});
-
-		ds = ds.withColumn("partNum", part)
-				.repartition(col("partNum"))
-				.sortWithinPartitions(col("partNum"));
+		StructType structType = ds.schema();
+		if (Objects.nonNull(part)) {
+			ds = ds.withColumn("partNum", part)
+					.repartition(col("partNum"))
+					.sortWithinPartitions(col("partNum"));
+		} else {
+			ds = ds.withColumn("partNum", expr("'0'"));
+		}
 
 		ds.foreachPartition(rows -> {
 			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
@@ -173,16 +138,14 @@ public class YouData {
 					Preconditions.checkArgument(Objects.nonNull(tmpPartNum));
 
 					if (!Objects.equals(tmpPartNum, lastPartNum)) {
-
-						System.out.println("本次与上次partNum有差异---");
 						String newTableName = opts.table() + partSuffix(tmpPartNum);
-
 						// 如果有该表则将该表中的数据清空
 						String drop_table = String.format("drop table if exists %s", newTableName);
 						statement.executeUpdate(drop_table);
 
 						// 建表
-						String col_sql = tableCol(row, opts);
+						String col_sql = tableCol(structType);
+						col_sql = col_sql.substring(0, col_sql.length() - 1);
 						String create_table = String.format("create table if not exists %s(%s) DEFAULT CHARSET=utf8mb4", newTableName, col_sql);
 						statement.executeUpdate(create_table);
 						sqlPrefix = sql_.substring(0, sql_.indexOf("(?"));
@@ -199,7 +162,6 @@ public class YouData {
 							sb = new StringBuilder((int) partNum + 1000);
 							sb.append(sqlPrefix);
 						}
-
 						collectionAc.add(tmpPartNum);
 						lastPartNum = tmpPartNum;
 					}
@@ -227,14 +189,13 @@ public class YouData {
 					group.append("),");
 					sb.append(group);
 
-					if (sb.length() >= partNum) {
+					if (sb.length() * 2L >= partNum) {
 						executeLength += sb.length();    // 每执行一次, 累计 + sb.length
-						statement.executeLargeUpdate(sb.substring(0, sb.length() - 1));
+						statement.executeLargeUpdate(sb.delete(sb.length() - 1, sb.length()).toString());
 						sb.setLength(0);
 						sb.append(sqlPrefix);
 					}
-
-					// 上面每执行一次, 累计 + max_allowed_packet, 累计加到缓冲池的70%, 提交
+					// 上面每执行一次, 累计 + max_allowed_packet, 累计加到缓冲池的阈值, 提交
 					if (executeLength >= bufferLength) {
 						logger.info("commit执行时间: {}", Instant.now());
 						conn.commit();
@@ -248,15 +209,12 @@ public class YouData {
 					statement.executeUpdate(ex_sql);
 					sb.setLength(0);
 					sb.append(sqlPrefix);
-					logger.info("剩余数量不足partNum的提交");
 				}
 				{
 					logger.info("commit执行时间: {}", Instant.now());
 					conn.commit();
-					executeLength = 0;
 				}
 			}
-
 		});
 	}
 
@@ -267,9 +225,13 @@ public class YouData {
 		return String.format("_part%s", a);
 	}
 
-	private static String tableCol(Row row, JdbcOptionsInWrite opts) {
-		SparkSession spark = SparkSession.builder().master("local[*]").getOrCreate();
-		StructType schema = row.schema();
-		return JdbcUtils.schemaString(spark.createDataFrame(ImmutableList.of(row), schema), opts.url(), Option.empty());
+	private static String tableCol(StructType type) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < type.size(); i++) {
+			String name = type.apply(i).name();
+			String jdbcType = JdbcUtils.getCommonJDBCType(type.apply(i).dataType()).get().databaseTypeDefinition();
+			sb.append("`").append(name).append("`").append(" ").append(jdbcType).append(",");
+		}
+		return sb.toString();
 	}
 }
