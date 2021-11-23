@@ -20,7 +20,7 @@ public class ConcurrentModificationExceptionTest {
 		// AbstractList源码: 216行, ArrayList的父类AbstractList中有一个域modCount, 每次对集合进行修改(增添元素, 删除元素...)时都会modCount++
 		// 而forEach的背后实现原理就是Iterator, 在这里, 迭代ArrayList的Iterator中有一个变量expectedModCount, 该变量会初始化和modCount相等
 		// 如果接下来集合进行修改(modCount改变), 就会造成 modCount != expectedModCount, 就会抛出java.util.ConcurrentModificationException异常
-		func5();
+		func7();
 	}
 
 	public static void func1() {
@@ -98,7 +98,67 @@ public class ConcurrentModificationExceptionTest {
 	// 多线程解决方案1: 迭代前加锁, 但还是不能进行迭代add, clear, etc
 	public static void func6() {
 		List<String> list = Lists.newArrayList("A", "B", "C", "D", "E");
+		new Thread(() -> {
+			Iterator<String> iter = list.iterator();
+			synchronized (list) {
+				while (iter.hasNext()) {
+					logger.info("{}: {}", Thread.currentThread().getName(), iter.next());
+					try {
+						TimeUnit.MILLISECONDS.sleep(1000L);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+
+		new Thread() {
+			@Override
+			public synchronized void run() {
+				Iterator<String> iterator = list.iterator();
+				synchronized (list) {
+					while (iterator.hasNext()) {
+						String e = iterator.next();
+						logger.info("{}: {}", Thread.currentThread().getName(), e);
+						if (e.equals("C")) {
+							iterator.remove();
+						}
+					}
+				}
+			}
+		}.start();
 	}
 
+	// 多线程解决方案2: 采用CopyOnWriteArrayList, 解决了多线程问题, 同时可以add, clear操作
+	public static void func7() {
+		// CopyOnWriteArrayList是一个线程安全的List, 实现原理: 每次add, remove等操作都是重新创建一个新的数组, 再把引用指向新的数组
+		List<String> list = Lists.newCopyOnWriteArrayList(Lists.newArrayList("A", "B", "C", "D", "E"));
+
+		new Thread(() -> {
+			Iterator<String> iterator = list.iterator();
+			while (iterator.hasNext()) {
+				logger.info("{}: {}", Thread.currentThread().getName(), iterator.next());
+				try {
+					TimeUnit.MILLISECONDS.sleep(1000L);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
+		new Thread() {
+			public synchronized void run() {
+				Iterator<String> iterator = list.iterator();
+				while (iterator.hasNext()) {
+					String e = iterator.next();
+					logger.info("{}: {}", Thread.currentThread().getName(), e);
+					if (e.equals("C")) {
+						list.remove(e);
+					}
+				}
+			}
+		}.start();
+	}
 
 }
