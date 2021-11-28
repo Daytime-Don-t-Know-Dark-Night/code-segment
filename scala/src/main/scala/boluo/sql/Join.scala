@@ -6,7 +6,7 @@ object Join {
 
     // Apache Spark 支持的7种join类型
     // https://sparkbyexamples.com/spark/different-ways-to-create-a-spark-dataframe/
-    // TODO https://blog.csdn.net/u4110122855/article/details/114694753
+    // https://blog.csdn.net/u4110122855/article/details/114694753
 
     def main(args: Array[String]): Unit = {
         // 我们有顾客(customer)和订单(order)相关的两张表
@@ -42,6 +42,11 @@ object Join {
         // 准备好数据之后, 我们来介绍这些
         innerJoin(order, customer)
         crossJoin(order, customer)
+        leftJoin(order, customer)
+        rightJoin(order, customer)
+        fullJoin(order, customer)
+        semiJoin(order, customer)
+        antiJoin(order, customer)
     }
 
     def innerJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
@@ -67,7 +72,92 @@ object Join {
 
     def leftJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
         // 左连接: left join = left outer join
+        val res = ds1.join(ds2, Seq("customerId"), "left")
+        res.show(false)
+        // +----------+---------+------+-----+
+        // |customerId|paymentId|amount|name |
+        // +----------+---------+------+-----+
+        // |101       |1        |2500  |name1|
+        // |103       |3        |500   |name3|
+        // |102       |2        |1110  |name2|
+        // |102       |4        |400   |name2|
+        // +----------+---------+------+-----+
+    }
 
+    def rightJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
+        // 右连接: right join = right outer join
+        val res = ds1.join(ds2, Seq("customerId"), "right")
+        res.show(false)
+        // +----------+---------+------+-----+
+        // |customerId|paymentId|amount|name |
+        // +----------+---------+------+-----+
+        // |101       |1        |2500  |name1|
+        // |103       |3        |500   |name3|
+        // |102       |2        |1110  |name2|
+        // |102       |4        |400   |name2|
+        // |105       |null     |null  |name5|
+        // |106       |null     |null  |name6|
+        // |104       |null     |null  |name4|
+        // +----------+---------+------+-----+
+    }
+
+    def fullJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
+        val res = ds1.join(ds2, Seq("customerId"), "outer")
+        res.show(false)
+        // +----------+---------+------+-----+
+        // |customerId|paymentId|amount|name |
+        // +----------+---------+------+-----+
+        // |101       |1        |2500  |name1|
+        // |103       |3        |500   |name3|
+        // |102       |2        |1110  |name2|
+        // |102       |4        |400   |name2|
+        // |105       |null     |null  |name5|
+        // |106       |null     |null  |name6|
+        // |104       |null     |null  |name4|
+        // +----------+---------+------+-----+
+    }
+
+    def semiJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
+        // left semi join, 只会返回左表中的数据, 会返回左表中匹配右表的数据
+        val res = ds1.join(ds2, Seq("customerId"), "left_semi")
+        res.show(false)
+        // +----------+---------+------+
+        // |customerId|paymentId|amount|
+        // +----------+---------+------+
+        // |101       |1        |2500  |
+        // |103       |3        |500   |
+        // |102       |2        |1110  |
+        // |102       |4        |400   |
+        // +----------+---------+------+
+
+        // left semi join 可以用 in/exists 来改写
+        ds1.registerTempTable("order")
+        ds2.registerTempTable("customer")
+        val spark = SparkSession.builder().master("local[*]").getOrCreate()
+        val res2 = spark.sql("select * from order where customerId in (select customerId from customer)")
+        // 结果同上
+        res2.show(false)
+    }
+
+    def antiJoin(ds1: Dataset[Row], ds2: Dataset[Row]) = {
+        // left anti join, 只会返回左表中的数据, 但是与 semi_join 相反, 只会返回没有在右表中没有匹配到的左表数据
+        val res = ds2.join(ds1, Seq("customerId"), "left_anti")
+        res.show(false)
+        // +----------+-----+
+        // |customerId|name |
+        // +----------+-----+
+        // |105       |name5|
+        // |106       |name6|
+        // |104       |name4|
+        // +----------+-----+
+
+        // 同理: left anti join 也可以用 not in 来改写
+        ds1.registerTempTable("order")
+        ds2.registerTempTable("customer")
+        val spark = SparkSession.builder().master("local[*]").getOrCreate()
+        val res2 = spark.sql("select * from customer where customerId not in (select customerId from order)")
+        // 结果同上
+        res2.show(false)
     }
 
 }
