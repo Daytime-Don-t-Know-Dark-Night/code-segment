@@ -2,10 +2,12 @@ package boluo.utils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import org.apache.spark.SparkContext;
 import org.apache.spark.SparkException;
 import org.apache.spark.TaskContext;
 import org.apache.spark.scheduler.SparkListener;
+import org.apache.spark.scheduler.SparkListenerStageSubmitted;
 import org.apache.spark.scheduler.SparkListenerTaskEnd;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -26,12 +28,10 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -51,19 +51,27 @@ public class YouData2 {
 		long max_allowed_packet = 4 * 1024 * 1024;
 		long buffer_pool_size = 128 * 1024 * 1024;
 
-		try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
-			 Statement statement = conn.createStatement()) {
+		try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply(); Statement statement = conn.createStatement()) {
 
-			// 建表
 			for (int i = 0; i < partNum; i++) {
+
 				String newTableName = opts.table() + partSuffix(i);
-				String drop_table = String.format("drop table if exists %s", newTableName);
-				statement.executeUpdate(drop_table);
+				try {
+					// 截断
+					String truncate_table = String.format("truncate table %s", newTableName);
+					statement.executeUpdate(truncate_table);
+					// drop
+					String drop_table = String.format("drop table if exists %s", newTableName);
+					statement.executeUpdate(drop_table);
+				} catch (SQLSyntaxErrorException e) {
+					e.printStackTrace();
+				}
+
+				// 建表
 				String col_sql = tableCol(ds.schema());
 				col_sql = col_sql.substring(0, col_sql.length() - 1);
 				String create_table = String.format("create table if not exists %s(%s) DEFAULT CHARSET=utf8mb4", newTableName, col_sql);
 				statement.executeUpdate(create_table);
-
 			}
 
 			try (ResultSet packetRes = statement.executeQuery("show global variables like 'max_allowed_packet'")) {
@@ -71,7 +79,6 @@ public class YouData2 {
 					max_allowed_packet = packetRes.getLong("Value");
 				}
 			}
-
 			try (ResultSet bufferRes = statement.executeQuery("show global variables like 'innodb_buffer_pool_size'")) {
 				while (bufferRes.next()) {
 					buffer_pool_size = bufferRes.getLong("Value");
@@ -92,24 +99,35 @@ public class YouData2 {
 		SparkContext sparkContext = ds.sparkSession().sparkContext();
 		int cores = sparkContext.defaultParallelism();
 		int executorNum = sparkContext.getExecutorIds().size() + 1;
-		final int partitions = ds.rdd().getNumPartitions();
 
 		long partLimit = Math.min(
 				Math.round(max_allowed_packet * max_allowed_factor),
 				Math.round(maxMemorySize * max_memory_factor * executorNum / cores)
 		);
 		long bufferLength = Math.round(buffer_pool_size * commit_factor);
-		Preconditions.checkArgument(partLimit > 0, "partNum计算值<=0");
+		Preconditions.checkArgument(partLimit > 0, "partLimit计算值<=0");
+
+		// 重要参数
+		logger.info("线程数: {}, 最大可用内存: {}, executorNum: {}, partLimit: {}, bufferLength: {}", cores, maxMemorySize, executorNum, partLimit, bufferLength);
 
 		SetAccumulator<Integer> collectionAc = new SetAccumulator<>();
 		collectionAc.register(SparkSession.active().sparkContext(), Option.apply("setAc"), false);
 
+		Map<Integer, Integer> partitionMap = Maps.newHashMap();
 		SparkSession.active().sparkContext().addSparkListener(new SparkListener() {
 
+			public void onStageSubmitted(SparkListenerStageSubmitted stageSubmitted) {
+				int stageId = stageSubmitted.stageInfo().stageId();
+				int numTasks = stageSubmitted.stageInfo().numTasks();
+				partitionMap.put(stageId, numTasks);
+			}
+
 			public void onTaskEnd(SparkListenerTaskEnd taskEnd) {
+				int currStageId = taskEnd.stageId();
+				Preconditions.checkArgument(partitionMap.containsKey(currStageId), "当前task中的stageId: " + currStageId + ", map中: " + partitionMap);
+				int partitions = partitionMap.get(currStageId);
 				synchronized (collectionAc.value()) {
 					// 确定该发哪一个
-					int part = 0;
 					Set<Integer> currSet = collectionAc.value();
 					long index = taskEnd.taskInfo().index();
 
@@ -128,43 +146,24 @@ public class YouData2 {
 
 		ds.foreachPartition(rows -> {
 			int taskId = TaskContext.getPartitionId();
-			collectionAc.add(taskId);    //0-199
+			collectionAc.add(taskId);    // 0-199
 			long tmpPartNum = taskId % partNum;
 
-			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply();
-				 Statement statement = conn.createStatement()) {
+			try (Connection conn = JdbcUtils.createConnectionFactory(opts).apply(); Statement statement = conn.createStatement()) {
 				conn.setAutoCommit(false);
-
 				int numFields = schema.fields().length;
-				int executeLength = 0;
-				StringBuilder sb = null;
-				String sqlPrefix = null;
+				long executeLength = 0;
 
-				Object lastPartNum = null;
+				// 替换表名
+				String newTableName = opts.table() + partSuffix(tmpPartNum);
+				String sqlPrefix = sql_.substring(0, sql_.indexOf("(?"));
+				sqlPrefix = sqlPrefix.replace(sqlPrefix.substring(12, sqlPrefix.indexOf("(")), newTableName);
+
+				StringBuilder sb = new StringBuilder((int) partLimit + 1000);
+				sb.append(sqlPrefix);
+
 				while (rows.hasNext()) {
 					Row row = rows.next();
-
-					// 如果本行数据和上一行数据在同一张表, 直接插入数据, 如果本行数据和上一行数据不在同一张表, 提交上一次数据, 建表, 插入数据
-					if (!Objects.equals(tmpPartNum, lastPartNum)) {
-						String newTableName = opts.table() + partSuffix(tmpPartNum);
-
-						sqlPrefix = sql_.substring(0, sql_.indexOf("(?"));
-						// 替换表名
-						sqlPrefix = sqlPrefix.replace(sqlPrefix.substring(12, sqlPrefix.indexOf("(")), newTableName);
-
-						if (!Objects.isNull(lastPartNum)) {
-							// 记录执行掉的sql的长度
-							executeLength += sb.length();
-							statement.executeUpdate(sb.substring(0, sb.length() - 1));
-							sb.setLength(0);
-							sb.append(sqlPrefix);
-						} else {
-							sb = new StringBuilder((int) partLimit + 1000);
-							sb.append(sqlPrefix);
-						}
-
-						lastPartNum = tmpPartNum;
-					}
 
 					StringBuilder group = new StringBuilder("(");
 					for (int i = 0; i < numFields; i++) {
@@ -191,21 +190,29 @@ public class YouData2 {
 
 					if (sb.length() * 2L >= partLimit) {
 						executeLength += sb.length();    // 每执行一次, 累计 + sb.length
+						logger.info("任务ID为: {}, execute过的数据长度: {}", taskId, executeLength);
 						statement.executeLargeUpdate(sb.delete(sb.length() - 1, sb.length()).toString());
 						sb.setLength(0);
 						sb.append(sqlPrefix);
-					}
-					// 上面每执行一次, 累计 + max_allowed_packet, 累计加到缓冲池的阈值, 提交
-					if (executeLength >= bufferLength) {
-						logger.info("commit执行时间: {}", Instant.now());
-						conn.commit();
-						executeLength = 0;
+
+						// 每次execute过后, 查看数据库缓冲池的可用页数量, 如果可用页数量<1000, commit
+						int bufferPageFreeNum = -1;
+						ResultSet bufferPageRes = statement.executeQuery("show status like 'Innodb_buffer_pool_pages_free'");
+						while (bufferPageRes.next()) {
+							bufferPageFreeNum = bufferPageRes.getInt("Value");
+						}
+						if (bufferPageFreeNum > 0 && bufferPageFreeNum < 1000) {
+							logger.info("缓冲池剩余空闲页为: {}, 执行commit: {}", bufferPageFreeNum, Instant.now());
+							conn.commit();
+							executeLength = 0;
+						}
 					}
 				}
 
 				// 剩余还有未被执行的数据
-				if (Objects.nonNull(sb) && sb.length() > sqlPrefix.length()) {
+				if (sb.length() > sqlPrefix.length()) {
 					String ex_sql = sb.substring(0, sb.length() - 1);
+					logger.info("execute过的数据长度: {}", executeLength);
 					statement.executeUpdate(ex_sql);
 					sb.setLength(0);
 					sb.append(sqlPrefix);
