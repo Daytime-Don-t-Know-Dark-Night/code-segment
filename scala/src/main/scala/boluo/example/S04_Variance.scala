@@ -1,4 +1,4 @@
-package boluo.basic
+package boluo.example
 
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.functions._

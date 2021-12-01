@@ -1,4 +1,4 @@
-package boluo.basic
+package boluo.example
 
 import org.apache.spark.sql.{RowFactory, SparkSession}
 import org.apache.spark.sql.types.StructType
