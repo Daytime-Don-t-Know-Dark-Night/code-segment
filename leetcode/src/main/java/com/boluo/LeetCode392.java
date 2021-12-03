@@ -27,7 +27,7 @@ public class LeetCode392 {
 	public static void main(String[] args) {
 		String s = "abc";
 		String t = "ahbgdc";
-		Assert.assertTrue(isSubsequence(s, t));
+		Assert.assertTrue(isSubsequence2(s, t));
 	}
 
 	// 单次遍历
@@ -45,6 +45,20 @@ public class LeetCode392 {
 	// 双指针解法
 	public static boolean isSubsequence2(String s, String t) {
 
-		throw new UnsupportedOperationException();
+		// 初始化两个指针i和j, 分别指向s和t的初始位置
+		int n = s.length(), m = t.length();
+		int i = 0, j = 0;
+
+		// 每次贪心的匹配, 匹配成功则i和j同时右移, 匹配s的下一个位置
+		while (i < n && j < m) {
+			if (s.charAt(i) == t.charAt(j)) {
+				i++;
+			}
+			// 匹配失败则j右移, i不变
+			j++;
+		}
+
+		// 如果i能移动到s的末尾, 则说明s是t的子序列
+		return i == n;
 	}
 }
