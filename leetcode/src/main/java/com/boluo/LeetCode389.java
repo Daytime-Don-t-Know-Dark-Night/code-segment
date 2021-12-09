@@ -1,5 +1,7 @@
 package com.boluo;
 
+import org.junit.Assert;
+
 /**
  * 给定两个字符串 s 和 t，它们只包含小写字母。
  * 字符串t由字符串s随机重排，然后在随机位置添加一个字母。
@@ -26,11 +28,16 @@ package com.boluo;
 public class LeetCode389 {
 
 	public static void main(String[] args) {
-
+		char c = findTheDifference("abcd", "abcde");
+		Assert.assertEquals(c, 'e');
 	}
 
-	// TODO https://leetcode-cn.com/problems/find-the-difference/solution/yi-ju-hua-zhao-bu-tong-reduce-gao-qi-lai-eqok/
+	// https://leetcode-cn.com/problems/find-the-difference/solution/yi-ju-hua-zhao-bu-tong-reduce-gao-qi-lai-eqok/
 	public static char findTheDifference(String s, String t) {
-		throw new UnsupportedOperationException();
+		int single = 0;
+		for (char c : (s + t).toCharArray()) {
+			single ^= c;
+		}
+		return (char) single;
 	}
 }
