@@ -31,8 +31,24 @@ public class LeetCode404 {
 		Assert.assertEquals(sum, 24);
 	}
 
+	// 深度优先搜索
 	public static int sumOfLeftLeaves(TreeNode root) {
 		// TODO https://leetcode-cn.com/problems/sum-of-left-leaves/solution/zuo-xie-zi-zhi-he-by-leetcode-solution/
-		throw new UnsupportedOperationException();
+		return root != null ? dfs(root) : 0;
+	}
+
+	public static int dfs(TreeNode node) {
+		int ans = 0;
+		if (node.left != null) {
+			ans += isLeafNode(node.left) ? node.left.val : dfs(node.left);
+		}
+		if (node.right != null && !isLeafNode(node.right)) {
+			ans += dfs(node.right);
+		}
+		return ans;
+	}
+
+	public static boolean isLeafNode(TreeNode node) {
+		return node.left == null && node.right == null;
 	}
 }

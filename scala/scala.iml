@@ -29,6 +29,7 @@
     <orderEntry type="library" exported="" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="scala-sdk-2.11.12" level="application" />
     <orderEntry type="library" name="scala-sdk-2.11.12" level="application" />
+    <orderEntry type="library" name="Maven: org.apache.spark:spark-avro_2.11:2.4.3" level="project" />
     <orderEntry type="library" name="Maven: io.delta:delta-core_2.11:0.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.12" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr4:4.7" level="project" />
