@@ -13,6 +13,7 @@
         <module>socket</module>
         <module>basic</module>
         <module>leetcode</module>
+        <module>spring-security</module>
     </modules>
 
     <properties>
@@ -33,6 +34,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- spring security -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
 
         <!-- mysql 提供驱动类 -->
         <dependency>

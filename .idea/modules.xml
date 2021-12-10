@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />
       <module fileurl="file://$PROJECT_DIR$/shiro-springboot/shiro-springboot.iml" filepath="$PROJECT_DIR$/shiro-springboot/shiro-springboot.iml" />
       <module fileurl="file://$PROJECT_DIR$/socket/socket.iml" filepath="$PROJECT_DIR$/socket/socket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-security/spring-security.iml" filepath="$PROJECT_DIR$/spring-security/spring-security.iml" />
     </modules>
   </component>
 </project>

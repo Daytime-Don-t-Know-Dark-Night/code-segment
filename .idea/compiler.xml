@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="spring-security" />
         <module name="leetcode" />
         <module name="socket" />
         <module name="basic" />
@@ -20,6 +21,7 @@
       <module name="scala" target="8" />
       <module name="shiro-springboot" target="1.8" />
       <module name="socket" target="8" />
+      <module name="spring-security" target="8" />
       <module name="wrapper" target="1.5" />
     </bytecodeTargetLevel>
   </component>
@@ -29,6 +31,7 @@
       <module name="leetcode" options="-parameters" />
       <module name="scala" options="-parameters" />
       <module name="shiro-springboot" options="-parameters" />
+      <module name="spring-security" options="-parameters" />
     </option>
   </component>
 </project>
