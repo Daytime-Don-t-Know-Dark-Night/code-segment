@@ -1,6 +1,7 @@
 package boluo.basic
 
 object S03_Circulate {
+
     def main(args: Array[String]): Unit = {
 
         // 1. while
@@ -38,5 +39,27 @@ object S03_Circulate {
             println("value of e: " + e)
             println("value of f: " + f)
         }
+
+        // for 循环集合
+        for (x <- List(1, 2, 3)) {
+            println(x)
+        }
+
+        // for 循环过滤
+        for (x <- List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+             if x != 3; if x < 8) {
+            println(x)
+        }
+
+        // for 使用yield
+        // 可以将for循环的返回值作为一个变量存储
+        var retVal = for {x <- List(1, 2, 3, 4, 5, 6, 7, 8, 9)
+                          if x != 3; if x < 8
+                          } yield x
+        // 输出返回值
+        for (a <- retVal) {
+            println("Value of a: " + a)
+        }
+
     }
 }
