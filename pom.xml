@@ -192,6 +192,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--lombok 依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- 解决 NoClassDefFoundError -->
         <dependency>
             <groupId>org.codehaus.janino</groupId>
