@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Generic {
+public class Generic<T> {
 
 	private static final Logger logger = LoggerFactory.getLogger(Generic.class);
 
 	// TODO https://juejin.cn/post/6960913691990556680
 	public static void main(String[] args) {
-
+		Generic1<?> generic = new Generic1<>();
+		generic.func4();
 	}
 
 	@Test
@@ -34,9 +35,13 @@ public class Generic {
 
 	// 泛型有三种使用方式: 泛型类, 泛型接口, 泛型方法
 	// 一个最普通的泛型类:
-	public class Generic1<T> {    // 这里T可以随便写为任意标识, 常见的如T, E, K, V等
+	public static class Generic1<T> {    // 这里T可以随便写为任意标识, 常见的如T, E, K, V等
 		// key这个成员变量的类型为T, T的类型由外部指定
 		private T key;
+
+		public Generic1() {
+
+		}
 
 		public Generic1(T key) {        // 泛型构造方法形参key的类型也为T, T的类型由外部指定
 			this.key = key;
@@ -45,6 +50,38 @@ public class Generic {
 		public T getKey() {        // 泛型方法getKey的返回值类型为T, T的类型由外部指定
 			return key;
 		}
+
+		// 泛型通配符
+		public void func1(Generic1<Number> obj) {
+			logger.info("泛型测试, key value is : {}", obj.getKey());
+		}
+
+		public void func2() {
+			Generic1<Integer> gInteger = new Generic1<Integer>(123);
+			Generic1<Number> gNumber = new Generic1<Number>(456);
+			// 传入gInteger会报错, 由此可以看出Generic<Integer>不能被看作Generic<Number>的子类
+			// 因此: 同一种泛型可以对应多个版本(因为参数类型不确定), 不同版本的泛型类实例是不兼容的
+			func1(gNumber);
+		}
+
+		// 泛型通配符
+		public void func3(Generic1<?> obj) {
+			// 此处的?一个实参, 而不是形参, 可以把?看作是所有类型的父类, 是一种真实的类型
+			// 可以用 ? 来表示未知类型
+			logger.info("泛型测试, key value is : {}", obj.getKey());
+		}
+
+		public void func4() {
+			Generic1<Integer> gInteger = new Generic1<Integer>(123);
+			Generic1<Number> gNumber = new Generic1<Number>(456);
+			func3(gInteger);
+			func3(gNumber);
+		}
+
+		// 泛型类: 是在实例化类的时候指明泛型的具体类型
+		// 泛型方法: 是在调用方法的时候指明泛型的具体类型
+
+
 	}
 
 	@Test
