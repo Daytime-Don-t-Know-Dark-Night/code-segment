@@ -12,9 +12,9 @@ public class Generic<T> {
 	private static final Logger logger = LoggerFactory.getLogger(Generic.class);
 
 	// TODO https://juejin.cn/post/6960913691990556680
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		Generic1<?> generic = new Generic1<>();
-		generic.func4();
+		generic.func6();
 	}
 
 	@Test
@@ -81,6 +81,29 @@ public class Generic<T> {
 		// 泛型类: 是在实例化类的时候指明泛型的具体类型
 		// 泛型方法: 是在调用方法的时候指明泛型的具体类型
 
+		/**
+		 * 泛型方法
+		 *
+		 * @param tClass 传入的泛型实参
+		 * @param <T> 返回值为T类型
+		 * @return
+		 * @throws IllegalAccessException
+		 * @throws InstantiationException
+		 * @description:
+		 * 1) public 与返回值中间的<T>非常重要, 可以理解为声明此方法为泛型方法
+		 * 2) 只有声明了<T>的方法才是泛型方法, 泛型类中的使用了泛型的成员方法并不是泛型方法
+		 * 3) <T>表明该方法将使用泛型类型T, 此时才可以在方法中使用泛型类型T
+		 * 4) 与泛型类的定义一样, 此处T可以随便写为任意标识: T,E,K,V
+		 */
+		public <T> T func5(Class<T> tClass) throws IllegalAccessException, InstantiationException {
+			T instance = tClass.newInstance();
+			return instance;
+		}
+
+		public void func6() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+			Object obj = func5(Class.forName("boluo.generic.Generic"));
+			logger.info("{}", obj);
+		}
 
 	}
 
