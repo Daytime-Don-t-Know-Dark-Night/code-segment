@@ -72,6 +72,7 @@ object DoubleWindow {
         // |12 |分区2|应用2|丁 |3    |
         // +---+-----+-----+---+-----+
 
+        // TODO 多次开窗过滤数据
         ds.withColumn("collect_log", collect_list("log")
             .over(Window.partitionBy("app", "apply").orderBy("ts")))
             .withColumn("rk", expr("row_number() over(partition by app,apply order by ts desc)"))
