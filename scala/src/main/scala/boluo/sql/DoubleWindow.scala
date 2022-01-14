@@ -2,10 +2,11 @@ package boluo.sql
 
 import org.apache.spark.sql.{RowFactory, SparkSession}
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.api.java.UDF2
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.types.StructType
 
-import scala.collection.JavaConversions
+import scala.collection.{JavaConversions, mutable}
 import org.apache.spark.sql.functions._
 
 object DoubleWindow {
@@ -73,12 +74,19 @@ object DoubleWindow {
         // +---+-----+-----+---+-----+
 
         // TODO 多次开窗过滤数据
-        ds.withColumn("collect_log", collect_list("log")
+        val ds2 = ds.withColumn("collect_log", collect_list("log")
             .over(Window.partitionBy("app", "apply").orderBy("ts")))
+            .withColumn("collect_after", expr("collect_list(after) over(partition by app,apply order by ts)"))
             .withColumn("rk", expr("row_number() over(partition by app,apply order by ts desc)"))
             .where("rk = 1")
-            .show(false)
 
+        // 注册自定义函数
+        spark.udf.register("filter", (app: String, log: mutable.WrappedArray[String]) => {
+            app + "boluo"
+        })
+
+        ds2.withColumn("fil", expr("filter(app,collect_log)"))
+            .show(false)
     }
 
 
