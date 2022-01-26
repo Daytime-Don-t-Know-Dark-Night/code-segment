@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Gold_Miner/Gold_Miner.iml" filepath="$PROJECT_DIR$/Gold_Miner/Gold_Miner.iml" />
       <module fileurl="file://$PROJECT_DIR$/basic/basic.iml" filepath="$PROJECT_DIR$/basic/basic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boluo-basic/basic (1).iml" filepath="$PROJECT_DIR$/boluo-basic/basic (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/boluo-basic/deps/deps.iml" filepath="$PROJECT_DIR$/boluo-basic/deps/deps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/boluo-basic/helper/helper.iml" filepath="$PROJECT_DIR$/boluo-basic/helper/helper.iml" />
       <module fileurl="file://$PROJECT_DIR$/leetcode/leetcode.iml" filepath="$PROJECT_DIR$/leetcode/leetcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/parent.iml" filepath="$PROJECT_DIR$/.idea/parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />

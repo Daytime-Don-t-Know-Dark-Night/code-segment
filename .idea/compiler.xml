@@ -6,16 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="helper" />
+        <module name="scala" />
         <module name="spring-security" />
         <module name="leetcode" />
         <module name="socket" />
         <module name="basic" />
-        <module name="scala" />
         <module name="shiro-springboot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="basic" target="8" />
+      <module name="basic (1)" target="1.8" />
+      <module name="deps" target="1.8" />
+      <module name="helper" target="8" />
       <module name="leetcode" target="8" />
       <module name="parent" target="8" />
       <module name="scala" target="8" />
@@ -28,6 +32,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="basic" options="-parameters" />
+      <module name="helper" options="" />
       <module name="leetcode" options="-parameters" />
       <module name="scala" options="-parameters" />
       <module name="shiro-springboot" options="-parameters" />
