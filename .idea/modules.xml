@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/boluo-basic/basic (1).iml" filepath="$PROJECT_DIR$/boluo-basic/basic (1).iml" />
       <module fileurl="file://$PROJECT_DIR$/boluo-basic/deps/deps.iml" filepath="$PROJECT_DIR$/boluo-basic/deps/deps.iml" />
       <module fileurl="file://$PROJECT_DIR$/boluo-basic/helper/helper.iml" filepath="$PROJECT_DIR$/boluo-basic/helper/helper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kafka/kafka.iml" filepath="$PROJECT_DIR$/kafka/kafka.iml" />
       <module fileurl="file://$PROJECT_DIR$/leetcode/leetcode.iml" filepath="$PROJECT_DIR$/leetcode/leetcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/parent.iml" filepath="$PROJECT_DIR$/.idea/parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />
