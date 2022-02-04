@@ -12,6 +12,12 @@
         <option value="$PROJECT_DIR$/basic/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/boluo-basic/deps/pom.xml" />
+        <option value="$PROJECT_DIR$/boluo-basic/helper/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>
