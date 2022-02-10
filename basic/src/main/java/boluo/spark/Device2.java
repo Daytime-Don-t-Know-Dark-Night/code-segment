@@ -7,6 +7,8 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.expressions.Window;
 import scala.Tuple3;
 
+import static org.apache.spark.sql.functions.*;
+
 public class Device2 {
 
 	public static void main(String[] args) {
@@ -41,6 +43,12 @@ public class Device2 {
 		// 一次开始结束区间为一个周期, 一个周期分配一个session, 该示例中有两个周期
 		// 开始时间和结束时间都取最早的一条
 		// 所以本次结果: [dev1, 101, 103], [dev2, 105, 106]
+
+		ds.withColumn("deviceId", expr("_1"))
+				.withColumn("ts", expr("_2"))
+				.withColumn("type", expr("_3"))
+				.drop("_1", "_2", "_3")
+				.show(false);
 
 	}
 
