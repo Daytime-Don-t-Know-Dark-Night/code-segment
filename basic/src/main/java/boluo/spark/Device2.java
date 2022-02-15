@@ -48,6 +48,16 @@ public class Device2 {
 				.withColumn("ts", expr("_2"))
 				.withColumn("type", expr("_3"))
 				.drop("_1", "_2", "_3")
+				.withColumn("flag", lag(col("type"), 1, "结束")
+						.over(Window.partitionBy("deviceId").orderBy("ts")))
+				.where("type != flag")
+				.withColumn("session", expr("sum(if(type='开始',1,0)) over(partition by deviceId order by ts)"))
+				.withColumn("session", concat(col("deviceId"), expr("'-'"), col("session")))
+				.groupBy("deviceId", "session")
+				.agg(
+						min("ts").as("开始时间"),
+						max("ts").as("结束时间")
+				)
 				.show(false);
 
 	}
