@@ -1,8 +1,15 @@
 package com.boluo;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import org.junit.Assert;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 有一个无向的星型图，由n个编号从1到n的节点组成。星型图有一个中心节点，并且恰有 n - 1 条边将中心节点与其他每个节点连接起来。
@@ -20,6 +27,11 @@ import java.util.Arrays;
 public class LeetCode1791 {
 
 	public static void main(String[] args) {
+		findTest();
+		findCenterTest();
+	}
+
+	public static void findCenterTest() {
 
 		int[][] nums1 = new int[][]{
 				{1, 2},
@@ -42,4 +54,33 @@ public class LeetCode1791 {
 		Arrays.stream(edges);
 		return -1;
 	}
+
+	public static void findTest() {
+		int[] nums1 = {1, 2};
+		int[] nums2 = {5, 1};
+		int[] nums3 = {1, 3};
+		int[] nums4 = {1, 4};
+		int res = find(nums1, nums2, nums3, nums4);
+		Assert.assertEquals(1, res);
+	}
+
+	public static int find(int[]... nums) {
+
+		List<List<Integer>> list = Lists.newArrayList();
+		Arrays.stream(nums).forEach(i -> {
+			List<Integer> inner = Arrays.stream(i).boxed().collect(Collectors.toList());
+			list.add(inner);
+		});
+
+		List<Integer> res = list.stream().reduce((l1, l2) -> {
+			l1.retainAll(l2);
+			return l1;
+		}).orElse(Collections.emptyList());
+
+		Optional<Integer> opt = res.stream().findFirst();
+		Preconditions.checkArgument(opt.isPresent());
+		return opt.get();
+
+	}
+
 }
