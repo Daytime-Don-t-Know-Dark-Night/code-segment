@@ -31,7 +31,7 @@ import java.util.Stack;
  * 输出：true
  */
 
-public class LeetCode20 {
+public class LeetCode0020 {
 
 	public static void main(String[] args) {
 		System.out.println(isValid("{()[()]}"));
