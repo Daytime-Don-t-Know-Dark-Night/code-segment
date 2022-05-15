@@ -9,8 +9,14 @@ A(Application) --> J2(Job2)
 J1 --> S1(Stage1)
 J1 --> S2(Stage2)
 
+J2 --> S3(Stage1)
+J2 --> S4(Stage2)
+
 S1 --> T1(Task1)
 S1 --> T2(Task2)
+
+S2 --> T3(Task1)
+S2 --> T4(Task2)
 
 ```
 
