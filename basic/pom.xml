@@ -16,12 +16,4 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.boluo</groupId>
-            <artifactId>basic</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
-
 </project>
