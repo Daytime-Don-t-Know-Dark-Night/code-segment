@@ -1,12 +1,9 @@
 package boluo.spark
 
-import com.google.common.util.concurrent.Uninterruptibles
 import org.apache.spark.sql.{RowFactory, SparkSession}
-import com.mongodb.client.model.Collation
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 
-import java.util.concurrent.TimeUnit
 import scala.collection.JavaConversions
 
 /**
@@ -46,8 +43,19 @@ object Demo1 {
         // +---+-----+---+---------------+-----------+----------+
 
         // 因为要把所有的字段全部拼接成为一个字段, 所以要先取到所有的字段名
-        val names = ds.schema.fields
-        print(names)
+        val names = ds.schema.fieldNames
+            .toStream
+            .map(name => expr(name))
+            .toArray
+
+        ds.select(concat_ws(",", names: _*)).show(false)
+        // +-------------------------------------------------+
+        // |concat_ws(,, id, name, age, email, phone, image) |
+        // +-------------------------------------------------+
+        // |1,dingc,20,cding@state.com,16631086282,/img/dingc|
+        // |2,boluo,30,boluo@state.com,17731086282,/img/boluo|
+        // |3,qidai,40,qidai@state.com,18831086282,/img/qidai|
+        // +-------------------------------------------------+
 
     }
 
