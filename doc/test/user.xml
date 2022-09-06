@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<usershelf>
+
+    <book id="001">
+        <name>dingc</name>
+        <age>20</age>
+        <email>110@state.com</email>
+    </book>
+
+    <book id="002">
+        <name>qidai</name>
+        <age>30</age>
+        <email>120@state.com</email>
+    </book>
+
+</usershelf>
