@@ -29,14 +29,15 @@ object WindowFunc2 {
             .add("name", "string")
             .add("subject", "string")
             .add("score", "int")
+            .add("time", "string")
 
         val rows = Array(
-            RowFactory.create(1: java.lang.Integer, "菠萝", "语文", 10: java.lang.Integer),
-            RowFactory.create(2: java.lang.Integer, "菠萝", "数学", 20: java.lang.Integer),
-            RowFactory.create(3: java.lang.Integer, "菠萝", "英语", 30: java.lang.Integer),
-            RowFactory.create(4: java.lang.Integer, "吹雪", "语文", 15: java.lang.Integer),
-            RowFactory.create(5: java.lang.Integer, "吹雪", "数学", 25: java.lang.Integer),
-            RowFactory.create(6: java.lang.Integer, "吹雪", "英语", 35: java.lang.Integer)
+            RowFactory.create(1: java.lang.Integer, "菠萝", "语文", 10: java.lang.Integer, "2020-09-08"),
+            RowFactory.create(2: java.lang.Integer, "菠萝", "数学", 20: java.lang.Integer, "2020-09-10"),
+            RowFactory.create(3: java.lang.Integer, "菠萝", "英语", 30: java.lang.Integer, "2020-09-13"),
+            RowFactory.create(4: java.lang.Integer, "吹雪", "语文", 15: java.lang.Integer, "2020-09-07"),
+            RowFactory.create(5: java.lang.Integer, "吹雪", "数学", 25: java.lang.Integer, "2020-09-08"),
+            RowFactory.create(6: java.lang.Integer, "吹雪", "英语", 35: java.lang.Integer, "2020-09-15")
         )
 
         var ds = spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
@@ -52,7 +53,24 @@ object WindowFunc2 {
         // |6  |吹雪|英语   |35   |
         // +---+----+-------+-----+
 
+        ds.show(false)
+        ds = ds.withColumn("time1", expr("lag(time,1,'2020-09-07') over (partition by name order by time)"))
+
+        ds = ds.withColumn("time", to_date(col("time")))
+            .withColumn("time1", to_date(col("time1")))
+
+        ds.withColumn("res", datediff(col("time"), col("time1")))
+            .show(false)
+
+        ds.withColumn("rk", expr("row_number() over (order by score)"))
+            .show(false)
+
+        ds.withColumn("rk", expr("row_number() over ( partition by name order by score)"))
+            .show(false)
+
         // 开窗求每人的总分
+        ds.withColumn("sum", expr("sum(score) over ()")).show(false)
+        ds.withColumn("sum", expr("sum(score) over (partition by name order by score)")).show(false)
         ds.withColumn("sum", expr("sum(score) over (partition by name)")).show(false)
         // +---+----+-------+-----+---+
         // |id |name|subject|score|sum|
