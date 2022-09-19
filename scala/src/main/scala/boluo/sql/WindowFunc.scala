@@ -4,7 +4,7 @@ import org.apache.spark.sql.{RowFactory, SparkSession}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.functions._
 
-import scala.collection.JavaConversions
+import scala.collection.{JavaConversions, mutable}
 
 object WindowFunc {
 
@@ -32,7 +32,8 @@ object WindowFunc {
             RowFactory.create(2: java.lang.Integer, 1: java.lang.Integer, 40: java.lang.Integer, "2021-08-27")
         )
 
-        val ds = spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
+        var ds = spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
+        ds = ds.withColumn("s", struct(expr("null")))
         ds.show(false)
 
         // 排序开窗函数 row_number() over, rank() over(), dense_rank() over()
@@ -48,5 +49,8 @@ object WindowFunc {
         ds.withColumn("sum1", expr("sum(score) over()"))
             .withColumn("sum2", expr("sum(score) over(partition by mid order by date)"))
             .show(false)
+
+
+        mutable.WrappedArray
     }
 }
