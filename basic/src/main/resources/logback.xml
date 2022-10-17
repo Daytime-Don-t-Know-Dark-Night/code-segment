@@ -1,45 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <logger name="org.apache.spark.streaming" level="INFO"/>
-    <logger name="org.apache.spark.storage" level="INFO"/>
-    <logger name="org.apache.kafka.clients.consumer.internals" level="INFO"/>
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!--附加器-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
-            </pattern>
+            <pattern>%date %class %line %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--这个附加器只会把日志输出到一个文件中-->
+    <appender name="File" class="ch.qos.logback.core.FileAppender">
+        <encoder>
+            <pattern>%date %class %line %msg%n</pattern>
+        </encoder>
+        <!--文件名-->
+        <file>mylog.log</file>
+        <!--true不会覆盖文件, false每次会覆盖以前-->
+        <append>true</append>
+    </appender>
 
-        <!--<file>${logging.file.path}/${application.name}.log</file>-->
-        <file>log/recon.log</file>
+    <!--滚动文件附加器-->
+    <appender name="File2" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--当前正在工作的文件名-->
+        <file>mylog.log</file>
 
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
-            </Pattern>
+        <encoder>
+            <pattern>%date %class %line %msg%n</pattern>
         </encoder>
 
+        <!--滚动策略: 设置新生成日志的文件名, 以及什么时候生成新的文件-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.file.path}/${application.name}_%d{dd-MM-yyyy}.%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>500MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>50</maxHistory>
+            <fileNamePattern>log_%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--只保留最近3个日志文件-->
+            <maxHistory>3</maxHistory>
+            <!--设置所有日志文件的总大小, 超过的话把旧文件删除-->
+            <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
+
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log_%d{yyyy-MM-dd}%i.log</fileNamePattern>
+            <!--只保留最近3个上面模式的(与另一个不同)日志文件-->
+            <maxHistory>3</maxHistory>
+            <!--设置所有日志文件的总大小, 超过的话把旧文件删除-->
+            <totalSizeCap>5GB</totalSizeCap>
+            <!--日志大小超过50M, 生成一份日志文件-->
+            <maxFileSize>50M</maxFileSize>
+        </rollingPolicy>
+
+        <!--true不会覆盖文件, false每次会覆盖以前-->
+        <append>true</append>
     </appender>
 
-    <logger name="com.gdl" level="INFO" additivity="true">
-        <appender-ref ref="CONSOLE"/>
+
+    <!--记录器-->
+    <!--根目录日志输出级别设置为INFO-->
+    <root level="INFO"></root>
+
+    <logger name="boluo.log" level="DEBUG">
+        <appender-ref ref="File2"/>
     </logger>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="SAVE-TO-FILE"/>
-    </root>
+
 
 </configuration>
