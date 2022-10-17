@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <logger name="org.apache.spark.streaming" level="INFO"/>
+    <logger name="org.apache.spark.storage" level="INFO"/>
+    <logger name="org.apache.kafka.clients.consumer.internals" level="INFO"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!--<file>${logging.file.path}/${application.name}.log</file>-->
+        <file>log/recon.log</file>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.file.path}/${application.name}_%d{dd-MM-yyyy}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.gdl" level="INFO" additivity="true">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SAVE-TO-FILE"/>
+    </root>
+
+</configuration>

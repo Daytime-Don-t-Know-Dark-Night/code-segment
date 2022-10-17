@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <jmxConfigurator/>
+    <!-- %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名,%i索引【从数字0开始递增】,,, 此处日志打印格式复用base.xml中的-->
+    <!-- appender是configuration的子节点，是负责写日志的组件。 -->
+    <!-- 读取application.yml文件中的项目名 -->
+    <springProperty scope="context" name="logName" source="spring.application.name" defaultValue="logName"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </pattern>
+        </layout>
+    </appender>
+
+    <!-- 日志文件输入配置 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>/opt/app/logs/historyLogs/${logName}/${logName}-scrollFile.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <!--1.先按日期存日志，日期变了，将前一天的日志文件名重命名为XXX%日期%索引，新的日志仍然是${logName}-run.log -->
+        <!--2.如果日期没有发生变化，但是当前日志的文件大小超过100MB时，对当前日志进行分割 重命名-->
+        <!--3.按天来回滚，如果需要按小时来回滚，则设置为{yyyy-MM-dd_HH} -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/opt/app/logs/historyLogs/${logName}/${logName}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100Mb</maxFileSize>
+            <maxHistory>70</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <!-- 日志文件的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %t %logger Line:%-3L - %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志 -->
+    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--        /Users/changjiang/confi/logs/${logName}/${logName}-%d{yyyy-MM-dd}.%i.log-->
+        <file>/opt/app/logs/historyLogs/${logName}/error/${logName}-error-scrollFile.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/opt/app/logs/historyLogs/${logName}/error/${logName}-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100Mb</maxFileSize>
+            <maxHistory>70</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <!-- 日志文件的格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %t %logger Line:%-3L - %msg%n</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <!--        <encoder charset="UTF-8">-->
+        <!--            <pattern>${LOG_PATTERN}</pattern>-->
+        <!--        </encoder>-->
+    </appender>
+
+    <!-- 不同环境输出不同级别的日志 -->
+    <springProfile name="local,dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="tk.mybatis" level="INFO"/>
+        <logger name="com.lima" level="DEBUG">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </logger>>
+    </springProfile>
+
+    <!-- 不同环境输出不同级别的日志 -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </root>
+        <logger name="tk.mybatis" level="DEBUG"/>
+        <logger name="com.lima" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="uat,pro">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR-APPENDER"/>
+        </root>
+    </springProfile>
+</configuration>
