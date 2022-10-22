@@ -15,6 +15,7 @@
         <module>leetcode</module>
         <module>spring-security</module>
         <module>kafka</module>
+        <module>scala</module>
     </modules>
 
     <properties>
