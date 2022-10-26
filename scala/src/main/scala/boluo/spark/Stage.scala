@@ -2,7 +2,6 @@ package boluo.spark
 
 import com.google.common.util.concurrent.Uninterruptibles
 import org.apache.spark.sql.{RowFactory, SparkSession}
-import com.mongodb.client.model.Collation
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
 

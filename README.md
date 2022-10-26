@@ -1,11 +1,3 @@
-# parent
-boluo
+### 版本改动: 
 
-
-```mermaid
-graph TD;
-A-->B;
-A-->C;
-B-->D;
-C-->D;
-```
+- 2022-10-26 去除冗余代码

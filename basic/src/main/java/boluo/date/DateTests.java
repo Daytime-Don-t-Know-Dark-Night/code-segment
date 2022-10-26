@@ -1,9 +1,9 @@
 package boluo.date;
 
-import lombok.SneakyThrows;
 import org.junit.Test;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +22,6 @@ public class DateTests {
 	 * date
 	 */
 	@Test
-	@SneakyThrows
 	public void testDate() {
 		Date currDate = new Date();
 		// 国际统一时间字符串格式	Sat Dec 18 13:29:43 CST 2021, CST代表 China standard time
@@ -37,8 +36,7 @@ public class DateTests {
 	 * date 也有时区和偏移量
 	 */
 	@Test
-	@SneakyThrows
-	public void testTimeZone() {
+	public void testTimeZone() throws ParseException {
 		String[] availableIDs = TimeZone.getAvailableIDs();
 		TimeZone defaultTz = TimeZone.getDefault();
 		int i = 0;

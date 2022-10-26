@@ -1,11 +1,7 @@
 package boluo.spark
 
-import com.google.common.util.concurrent.Uninterruptibles
 import org.apache.spark.sql.SparkSession
-import com.mongodb.client.model.Collation
 import org.apache.spark.sql.functions._
-
-import java.util.concurrent.TimeUnit
 
 object PushDownPredicate {
 
