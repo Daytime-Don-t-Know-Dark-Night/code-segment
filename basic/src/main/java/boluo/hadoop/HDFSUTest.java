@@ -26,8 +26,12 @@ public class HDFSUTest {
         // String targetPath = "file:///C:/Users/chao/IdeaProjects/parent/doc/target/";
         // renameMove(tmpPath, targetPath, batchId);
 
-        String path = "file:///C:/Users/chao/IdeaProjects/parent/doc/tmp/3.txt";
-        append(path);
+        // String path = "file:///C:/Users/chao/IdeaProjects/parent/doc/tmp/3.txt";
+        // append(path);
+
+        String content = "this is file content!";
+        String path = "file:///C:/Users/chao/IdeaProjects/parent/doc/tmp/4.txt";
+        createFile(path, content.getBytes());
     }
 
     // 将tmp路径下的文件转移到target路径, 并且重命名, 删除原文件和原目录
@@ -47,6 +51,20 @@ public class HDFSUTest {
             fs.delete(new Path(sourcePath), true);
         }
 
+    }
+
+    // 创建文件
+    public static void createFile(String path, byte[] contents) throws IOException {
+
+        FileSystem fs = FileSystem.get(SparkSession.active().sparkContext().hadoopConfiguration());
+        Path dstPath = new Path(path);
+
+        // 打开一个输出流
+        FSDataOutputStream outputStream = fs.create(dstPath);
+        outputStream.write(contents);
+        outputStream.close();
+        fs.close();
+        System.out.println("文件创建成功！");
     }
 
     // 追加文件, 会报错 java.lang.UnsupportedOperationException: Append is not supported by ChecksumFileSystem
