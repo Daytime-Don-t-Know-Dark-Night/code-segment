@@ -1,5 +1,6 @@
 package boluo.sql
 
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
 object Join {
@@ -24,6 +25,11 @@ object Join {
         // |3        |103       |500   |
         // |4        |102       |400   |
         // +---------+----------+------+
+        val ds = order
+        val fieldNames = ds.schema.fieldNames
+        ds.select(fieldNames.map(col): _*).show(false)
+        ds.select(fieldNames.map(name => col(name)): _*).show(false)
+        ds.selectExpr(fieldNames: _*).show(false)
 
         val customer = spark.sparkContext.parallelize(Seq((101, "name1"), (102, "name2"), (103, "name3"), (104, "name4"), (105, "name5"), (106, "name6")))
             .toDF("customerId", "name")
