@@ -18,7 +18,7 @@ public class LoadJson {
     // 使用jackson解析json文件
     public static void main(String[] args) throws IOException {
 
-        String path = "C:\\Projects\\home\\parent\\doc\\test\\recon.json";
+        String path = "C:\\Projects\\home\\dingx\\doc\\test\\recon.json";
         ObjectNode obj = (ObjectNode) mapper.readTree(new File(path));
 
         String id = obj.at("/NPC/BS001/ID").asText();

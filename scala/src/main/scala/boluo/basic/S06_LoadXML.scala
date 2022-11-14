@@ -12,7 +12,7 @@ object S06_LoadXML {
     // 加载xml文件
     def main(args: Array[String]): Unit = {
 
-        val path = "C:\\Projects\\home\\parent\\doc\\test\\user.xml";
+        val path = "C:\\Projects\\home\\dingx\\doc\\test\\user.xml";
         val xmlFile = XML.load(path)
 
         println("用户数: " + (xmlFile \\ "book").size)

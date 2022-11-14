@@ -30,7 +30,7 @@ public class HDFSUTest {
         // append(path);
 
         String content = "this is file content!";
-        String path = "file:///C:/Users/chao/IdeaProjects/parent/doc/tmp/4.txt";
+        String path = "file:///C:/Users/chao/IdeaProjects/dingx/doc/tmp/4.txt";
         createFile(path, content.getBytes());
     }
 

@@ -1,6 +1,5 @@
 package com.boluo;
 
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -52,11 +51,9 @@ public class KafkaConsumerTest {
 				long offset = consumerRecord.offset();
 				String key = consumerRecord.key();
 				String value = consumerRecord.value();
-
 				logger.info("topic: {}, offset: {}, key: {}, value: {}", topic, offset, key, value);
 			}
 		}
-
 	}
 
 }

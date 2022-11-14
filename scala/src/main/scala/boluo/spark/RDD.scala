@@ -24,7 +24,7 @@ object RDD {
 
     // 从外部存储文件中创建RDD
     def makeFunc2(sparkContext: SparkContext): Unit = {
-        val fileRDD: RDD[String] = sparkContext.textFile("file:///D:/projects/parent/doc/test/rdd.txt")
+        val fileRDD: RDD[String] = sparkContext.textFile("file:///D:/projects/dingx/doc/test/rdd.txt")
         fileRDD.collect().foreach(println)
         sparkContext.stop()
     }
