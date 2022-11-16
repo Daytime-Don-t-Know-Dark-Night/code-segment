@@ -1,0 +1,18 @@
+{
+    "ID": "S003",
+    "Name": "dingc",
+    "HP": 100,
+    "slave": [
+        {
+            "ID": "M001",
+            "Name": "zhq",
+            "HP": 120
+        },
+        {
+            "ID": "M002",
+            "Name": "lqy",
+            "HP": 175
+        }
+    ],
+    "email": "cding@state.com"
+}
