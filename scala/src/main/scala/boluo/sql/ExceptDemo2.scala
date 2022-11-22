@@ -76,7 +76,7 @@ object ExceptDemo2 {
     def named_struct(ds: Dataset[Row], tag: String): Dataset[Row] = {
         // named_struct("a", 1, "b", 2, "c", 3)
         val array: Array[String] = ds.columns.toStream.map(name => String.format("'%s',%s", name, name)).toArray
-        val inner = String.join(",", JavaConversions.asJavaCollection(array))
+        val inner = array.mkString(",")
         ds.withColumn(tag, expr("named_struct(" + inner + ")"))
     }
 
