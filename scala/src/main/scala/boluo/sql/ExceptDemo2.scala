@@ -5,6 +5,7 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{ArrayType, DataTypes, StructType}
 import org.apache.spark.sql.{Dataset, Row, RowFactory, SparkSession}
 
+import scala.#::
 import scala.collection.JavaConversions
 
 /**
@@ -24,16 +25,13 @@ object ExceptDemo2 {
 
         val rows1 = Array(
             RowFactory.create("001", "小明", "10"),
-            RowFactory.create("002", "小李", "11"),
-            RowFactory.create("003", "小红", "12"),
-            RowFactory.create("004", "小刚", "12")
+            RowFactory.create("002", "小王", "11"),
+            RowFactory.create("005", "小刚", "12")
         )
 
         val rows2 = Array(
             RowFactory.create("001", "小明", "10"),
-            RowFactory.create("002", "小李", "11"),
-            RowFactory.create("003", "小王", "12"),
-            RowFactory.create("004", "小刚", "13")
+            RowFactory.create("002", "小李", "11")
         )
 
 
@@ -46,11 +44,14 @@ object ExceptDemo2 {
         ds1.show(false)
         ds2.show(false)
 
-        val dsJoin = ds1.as("src").join(
+        var dsJoin = ds1.as("src").join(
             ds2.as("tar"),
             expr("src.userId = tar.userId"),
             "full"
-        ).where("src.source != tar.target")
+        )
+        dsJoin.show(false)
+
+        dsJoin = dsJoin.where("src.source != tar.target or src.userId is null or tar.userId is null")
         dsJoin.show(false)
 
         // ArrayType.apply(tmpSchema) 代表的是UDF返回值的类型
@@ -82,21 +83,35 @@ object ExceptDemo2 {
 
 
     def compare: (Row, Row) => Seq[Row] = (sourceRow: Row, targetRow: Row) => {
-        assert(sourceRow.schema.size == targetRow.schema.size)
-        var sourceList: List[Any] = List("source")
-        var targetList: List[Any] = List("target")
-        for (i <- sourceRow.schema.indices) {
-            if (Objects.equal(sourceRow.get(i), targetRow.get(i))) {
-                sourceList = sourceList :+ null
-                targetList = targetList :+ null
-            } else {
-                sourceList = sourceList :+ sourceRow.get(i)
-                targetList = targetList :+ targetRow.get(i)
-            }
-        }
 
-        val tmpSourceRow = RowFactory.create(JavaConversions.asJavaCollection(sourceList).toArray: _*)
-        val tmpTargetRow = RowFactory.create(JavaConversions.asJavaCollection(targetList).toArray: _*)
-        Seq.apply(tmpSourceRow, tmpTargetRow)
+        if (sourceRow == null && targetRow != null) {
+            val sourceArray: Array[Object] = Array.concat(Array("source"), sourceRow.schema.fieldNames.toStream.map(_ => null).toArray)
+            val tmpSourceRow = RowFactory.create(sourceArray: _*)
+            val targetArray: Array[Object] = Array.concat(Array("target"), JavaConversions.asJavaCollection(targetRow.toSeq).toArray)
+            val tmpTargetRow = RowFactory.create(targetArray: _*)
+            Seq.apply(tmpSourceRow, tmpTargetRow)
+        } else if (sourceRow != null && targetRow == null) {
+            val sourceArray: Array[Object] = Array.concat(Array("source"), JavaConversions.asJavaCollection(sourceRow.toSeq).toArray)
+            val tmpSourceRow = RowFactory.create(sourceArray: _*)
+            val targetArray: Array[Object] = Array.concat(Array("target"), sourceRow.schema.fieldNames.toStream.map(_ => null).toArray)
+            val tmpTargetRow = RowFactory.create(targetArray: _*)
+            Seq.apply(tmpSourceRow, tmpTargetRow)
+        } else {
+            var sourceList: List[Any] = List("source")
+            var targetList: List[Any] = List("target")
+            for (i <- sourceRow.schema.indices) {
+                if (Objects.equal(sourceRow.get(i), targetRow.get(i))) {
+                    sourceList = sourceList :+ null
+                    targetList = targetList :+ null
+                } else {
+                    sourceList = sourceList :+ sourceRow.get(i)
+                    targetList = targetList :+ targetRow.get(i)
+                }
+            }
+
+            val tmpSourceRow = RowFactory.create(JavaConversions.asJavaCollection(sourceList).toArray: _*)
+            val tmpTargetRow = RowFactory.create(JavaConversions.asJavaCollection(targetList).toArray: _*)
+            Seq.apply(tmpSourceRow, tmpTargetRow)
+        }
     }
 }
