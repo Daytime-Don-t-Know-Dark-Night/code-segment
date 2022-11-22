@@ -54,7 +54,11 @@ object ExceptDemo2 {
         dsJoin.show(false)
 
         // ArrayType.apply(tmpSchema) 代表的是UDF返回值的类型
-        val tmpSchema = dsJoin.schema.apply("source").dataType.asInstanceOf[StructType].add("tag", DataTypes.StringType)
+        var tmpSchema = new StructType().add("tag", DataTypes.StringType)
+        val sc = dsJoin.schema.apply("source").dataType.asInstanceOf[StructType]
+        for (s <- sc) {
+            tmpSchema = tmpSchema.add(s)
+        }
         val compareUDF = udf(compare, ArrayType.apply(tmpSchema))
 
         var res = dsJoin.select(
