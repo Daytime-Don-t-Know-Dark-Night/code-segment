@@ -44,7 +44,7 @@ public class DataSkew {
 
 		Dataset<Row> ds = spark.createDataFrame(ImmutableList.of(row1, row2, row3, row4, row5, row6, row7, row8, row9,
 				row10, row11, row12, row13, row14, row15, row16, row17, row18, row19), scheme);
-		ds.show(false);
+		// ds.show(false);
 		// +----------+------+------+
 		// |时间      |订单号|备注  |
 		// +----------+------+------+
@@ -70,8 +70,10 @@ public class DataSkew {
 		// +----------+------+------+
 
 		// 添加一列, 统计每一天的订单数
-		// ds.withColumn("ex", expr("count(0) over (partition by `时间`)")).show(false);
-
+		ds.cache();
+		ds.join(ds, "时间").show(false);
+		ds.withColumn("ex", expr("count(0) over (partition by `时间`)")).show(false);
+		Uninterruptibles.sleepUninterruptibly(50000, TimeUnit.SECONDS);
 		// 分析Spark Jobs可知Spark对19条数据的全部处理过程:
 		// Job Id = 3 的 Stage7中, 处理了14条数据, 其中有100个Task, task0处理了2条数据, task20处理了12条数据, 其余处理了0条数据
 		// Job Id = 4 的 Stage9中, 处理了5条数据, 其中有75个Task, 其中有3个task分别处理了2,2,1条数据
