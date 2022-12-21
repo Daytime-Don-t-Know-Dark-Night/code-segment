@@ -22,7 +22,6 @@
 - [guava](./java/guava)
 - [hadoop](./java/hadoop)
 - [io流](./java/io)
-- [Iterable](./java/iterable)
 - [jackson](./java/jackson)
 - [JDBC](./java/jdbc)
 - [Optional](./java/optional)
