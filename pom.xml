@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.boluo</groupId>
-    <artifactId>dingx</artifactId>
+    <artifactId>code-segment</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
         <module>basic</module>
         <module>kafka</module>
-        <module>leetcode</module>
         <module>scala</module>
     </modules>
 
