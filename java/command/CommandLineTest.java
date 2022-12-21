@@ -1,4 +1,4 @@
-package boluo.command;
+package command;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -15,6 +15,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class CommandLineTest {
 
+    /*
+    -env=prod
+    -js=2022-12-21/01:01:01
+    -cp=/usr/conf
+    * */
     public static void main(String[] args) throws ParseException {
 
         CommandLine cli = new GnuParser().parse(new Options()

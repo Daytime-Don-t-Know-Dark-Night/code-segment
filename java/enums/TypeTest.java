@@ -1,4 +1,4 @@
-package boluo.enums;
+package enums;
 
 /**
  * @author chao
