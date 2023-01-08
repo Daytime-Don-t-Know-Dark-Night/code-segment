@@ -5,7 +5,6 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Anduin2017/HowToCook)](https://github.com/Anduin2017/HowToCook/graphs/contributors)
 [![npm](https://img.shields.io/npm/v/how-to-cook)](https://www.npmjs.com/package/how-to-cook)
 
-
 ## java
 
 - [算法](./java/algorithm)
@@ -22,23 +21,32 @@
 - [异常](./java/exception)
 - [泛型](./java/generic)
 - [guava](./java/guava)
+    - [布隆过滤器](./java/guava/Bloom.java)
+    - [Guava缓存](./java/guava/GuavaCacheService.java)
 - [hadoop](./java/hadoop)
 - [io流](./java/io)
 - [jackson](./java/jackson)
-- [JDBC](./java/jdbc)
+    - [加载json文件](./java/jackson/LoadJson.java)
+    - [node转DataSet](./java/jackson/NodeToDataSet.java)
+- [jdbc](./java/jdbc)
 - [Optional](./java/optional)
 - [正则表达式](./java/pattern)
 - [队列](./java/queue)
     - [Kafka](./java/queue/kafka)
 - [反射](./java/reflex)
 - [Spark](./java/spark)
-    - [List转DataSet](./java/spark/List2Dataset.java)
+    - [缓存](./java/spark/CacheTest.java)
+    - [数据倾斜](./java/spark/DataSkew.java)
+    - [List转DataSet](./java/spark/ListToDataset.java)
+    - [Stage划分](./java/spark/StageTest.java)
+    - [UDAF](./java/spark/UDAFunc.java)
+    - [UDF](./java/spark/UDFunc.java)
 - [Stream](./java/stream)
 - [字符串相关](./java/string)
     - [查找最后某个字符](./java/string/CharMatcherTest.java)
 - [线程](./java/thread)
+    - [死锁](./java/thread/DeadLock.java)
 - [事务](./java/transaction)
-
 
 ## scala
 

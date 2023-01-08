@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2022/12/22 15:15
  * @desc
  */
-public class List2Dataset {
+public class ListToDataset {
 
     public static void main(String[] args) {
         // 消息

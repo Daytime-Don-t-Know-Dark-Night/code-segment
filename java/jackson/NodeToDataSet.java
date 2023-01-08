@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2022/11/16 22:50
  * @desc
  */
-public class Node2DataSet {
+public class NodeToDataSet {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final SparkSession spark = SparkSession
