@@ -1,15 +1,14 @@
-package boluo.basic
+package io
 
 import java.io.{ByteArrayOutputStream, InputStream}
 import java.nio.file.{Files, Paths}
-import scala.util.control._
 
 /**
  * @author chao
- * @date 2022/12/15 11:07
+ * @date 2023/1/8 18:40
  * @desc
  */
-object S09_IO {
+object InputStreamToStrings {
 
     def main(args: Array[String]): Unit = {
         val inputStream = Files.newInputStream(Paths.get("C:\\Users\\chao\\IdeaProjects\\dingx\\doc\\txt\\1.txt"))

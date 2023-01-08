@@ -9,7 +9,7 @@ import java.nio.file.Paths;
  * @date 2022/12/15 10:23
  * @desc
  */
-public class InputStream2String {
+public class InputStreamToString {
 
     public static void main(String[] args) throws IOException {
         InputStream inputStream = Files.newInputStream(Paths.get("C:\\Users\\chao\\IdeaProjects\\dingx\\doc\\txt\\1.txt"));

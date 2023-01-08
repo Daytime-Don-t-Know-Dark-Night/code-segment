@@ -1,8 +1,13 @@
-package boluo.basic
+package spark
 
 import org.apache.spark.sql.SparkSession
 
-object S04_Mongo {
+/**
+ * @author chao
+ * @date 2023/1/8 18:16
+ * @desc
+ */
+object ConnectMongo {
 
     // Spark连接Mongo数据库
     def main(args: Array[String]): Unit = {

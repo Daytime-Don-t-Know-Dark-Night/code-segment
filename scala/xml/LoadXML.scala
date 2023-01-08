@@ -1,18 +1,17 @@
-package boluo.basic
+package xml
 
 import scala.xml._
 
 /**
- * @Author dingc
- * @Date 2022-09-06 21:07
- * @Description
+ * @author chao
+ * @date 2023/1/7 21:33
+ * @desc
  */
-object S06_LoadXML {
+object LoadXML {
 
-    // 加载xml文件
     def main(args: Array[String]): Unit = {
 
-        val path = "C:\\Projects\\home\\dingx\\doc\\test\\user.xml";
+        val path = "./scala/xml/user.xml"
         val xmlFile = XML.load(path)
 
         println("用户数: " + (xmlFile \\ "book").size)
@@ -20,13 +19,13 @@ object S06_LoadXML {
         // 查找 bookId=001的元素
 
         var bookNodeSeq = (xmlFile \ "book").filter(x => (x \ "@id").text.equals("001"))
-        var entity = new S06_Entity
+        var entity = new Entity
         entity.setName(bookNodeSeq.\("name").text)
         entity.setAge(bookNodeSeq.\("age").text)
         entity.setEmail(bookNodeSeq.\("email").text)
 
         println(entity)
-    }
 
+    }
 
 }

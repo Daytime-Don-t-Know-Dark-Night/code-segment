@@ -40,9 +40,19 @@
 
 ## scala
 
+- [基础组件](./scala/basic)
+    - [字符串相关](./scala/basic/S01_String.scala)
 - [日期](./scala/datetime)
     - [时间循环](./scala/datetime/TimeCycle.scala)
+- [io流](./scala/io)
+- [xml](./scala/xml)
 - [Spark](./scala/spark)
+    - [连接Elasticsearch数据库](./scala/spark/ConnectElasticsearch.scala)
+    - [连接Mongo数据库](./scala/spark/ConnectMongo.scala)
+    - [连接Oracle数据库](./scala/spark/ConnectOracle.scala)
+    - [谓词下推](./scala/spark/PushDownPredicate.scala)
+    - [Stage划分](./scala/spark/Stage.scala)
+    - [UDF](./scala/spark/UDFunc.scala)
 - [SQL题](./scala/sql)
 
 

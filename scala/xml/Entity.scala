@@ -1,13 +1,13 @@
-package boluo.basic
+package xml
 
 import scala.beans.BeanProperty
 
 /**
- * @Author dingc
- * @Date 2022-09-06 21:50
- * @Description
+ * @author chao
+ * @date 2023/1/7 21:35
+ * @desc
  */
-class S06_Entity {
+class Entity {
 
     @BeanProperty
     var name = ""

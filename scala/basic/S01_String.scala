@@ -1,4 +1,4 @@
-package alibaba
+package basic
 
 /**
  * @Author dingc
@@ -7,7 +7,7 @@ package alibaba
  */
 
 // App是Scala自己提供的一个类, 当object继承它时, 不需要写main方法, 会将整个类看作一个main方法
-object D4_String extends App {
+object S01_String extends App {
 
     val name = "JackMa"
     val price = 999.88d
