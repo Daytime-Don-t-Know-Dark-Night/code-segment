@@ -5,7 +5,7 @@ package boluo.basic
  * @date 2022/12/15 21:03
  * @desc
  */
-object S10_Implicit {
+object Implicit {
 
     // 1.隐式值 && 隐式参数
     def main2(args: Array[String]): Unit = {

@@ -1,6 +1,6 @@
 package boluo.basic
 
-object S03_Circulate {
+object Circulation {
 
     def main(args: Array[String]): Unit = {
 

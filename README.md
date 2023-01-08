@@ -5,6 +5,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Anduin2017/HowToCook)](https://github.com/Anduin2017/HowToCook/graphs/contributors)
 [![npm](https://img.shields.io/npm/v/how-to-cook)](https://www.npmjs.com/package/how-to-cook)
 
+
 ## java
 
 - [算法](./java/algorithm)
@@ -38,10 +39,14 @@
 - [线程](./java/thread)
 - [事务](./java/transaction)
 
+
 ## scala
 
 - [基础组件](./scala/basic)
-    - [字符串相关](./scala/basic/S01_String.scala)
+    - [数组](./scala/basic/ArrayTest.scala)
+    - [循环](./scala/basic/Circulation.scala)
+    - [隐式转换](./scala/basic/Implicit.scala)
+    - [字符串相关](./scala/basic/StringTest.scala)
 - [日期](./scala/datetime)
     - [时间循环](./scala/datetime/TimeCycle.scala)
 - [io流](./scala/io)

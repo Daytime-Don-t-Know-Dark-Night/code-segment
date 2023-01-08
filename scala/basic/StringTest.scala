@@ -7,7 +7,7 @@ package basic
  */
 
 // App是Scala自己提供的一个类, 当object继承它时, 不需要写main方法, 会将整个类看作一个main方法
-object S01_String extends App {
+object StringTest extends App {
 
     val name = "JackMa"
     val price = 999.88d
