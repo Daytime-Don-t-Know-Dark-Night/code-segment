@@ -36,6 +36,7 @@
 - [反射](./java/reflex)
 - [Spark](./java/spark)
     - [缓存](./java/spark/CacheTest.java)
+    - [连接HDFS](./java/spark/ConnectHDFS.java)
     - [数据倾斜](./java/spark/DataSkew.java)
     - [List转DataSet](./java/spark/ListToDataset.java)
     - [Stage划分](./java/spark/StageTest.java)

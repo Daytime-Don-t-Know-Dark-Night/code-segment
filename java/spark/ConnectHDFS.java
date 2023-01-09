@@ -5,11 +5,11 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 /**
- * @Author dingc
- * @Date 2022-09-05 21:54
- * @Description
+ * @author chao
+ * @date 2023/1/8 22:14
+ * @desc
  */
-public class HDFSTest {
+public class ConnectHDFS {
 
     // Spark连接HDFS, avro文件
     public static void main(String[] args) {
@@ -24,4 +24,5 @@ public class HDFSTest {
                 .load(path);
 
     }
+
 }
