@@ -59,6 +59,7 @@
 - [日期](./scala/datetime)
     - [时间循环](./scala/datetime/TimeCycle.scala)
 - [io流](./scala/io)
+- [正则表达式](./scala/pattern)
 - [xml](./scala/xml)
 - [Spark](./scala/spark)
     - [连接Elasticsearch数据库](./scala/spark/ConnectElasticsearch.scala)
