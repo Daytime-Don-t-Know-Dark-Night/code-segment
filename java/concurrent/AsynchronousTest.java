@@ -14,6 +14,8 @@ public class AsynchronousTest {
 
     private static final Long MAX_SLEEP_TIME = 10L;
 
+    // https://www.cnblogs.com/cscw/p/14095819.html
+
     public static void main(String[] args) throws InterruptedException {
 
         List<String> tableNames = Lists.newArrayList("tableA", "tableB", "tableC", "tableD", "tableE", "tableF");
