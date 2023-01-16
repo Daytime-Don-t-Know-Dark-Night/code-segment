@@ -74,6 +74,7 @@
         - [UDF](./scala/spark/core/UDFunc.scala)
     - [sql](./scala/spark/sql)
     - [streaming](./scala/spark/streaming)
+        - [单词计数](./scala/spark/streaming/WordCount.scala)
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
 
