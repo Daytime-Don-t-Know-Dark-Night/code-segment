@@ -1,17 +1,7 @@
-package boluo.spark
+package spark.core
 
-import com.google.common.collect.ImmutableList
-import com.google.common.util.concurrent.Uninterruptibles
-import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.RowFactory
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.types.StructType
-
-import java.util.concurrent.TimeUnit
 import org.apache.spark.sql.functions._
-
-import scala.collection.JavaConversions
 
 /**
  * @author chao

@@ -1,6 +1,4 @@
-package spark
-
-import org.apache.spark.sql.SparkSession
+package spark.core
 
 /**
  * @author chao

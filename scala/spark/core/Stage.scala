@@ -1,9 +1,9 @@
-package boluo.spark
+package spark.core
 
 import com.google.common.util.concurrent.Uninterruptibles
-import org.apache.spark.sql.{RowFactory, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{RowFactory, SparkSession}
 
 import java.util.concurrent.TimeUnit
 import scala.collection.JavaConversions
