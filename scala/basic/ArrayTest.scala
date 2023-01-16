@@ -9,14 +9,28 @@ import scala.collection.mutable.ArrayBuffer
  */
 object ArrayTest {
 
+    // https://nummy-demo.readthedocs.io/zh_CN/latest/chapter/chapter04.html
+
     def main(args: Array[String]): Unit = {
+        // func1()
+        // func2()
+        // func3()
+        func4()
+    }
+
+    // 定长数组
+    def func1(): Unit = {
 
         val array1 = new Array[Int](8)
-        println(array1)
+        println(array1.mkString(","))
         println(array1.toBuffer)
 
         val array2 = Array("tom", "jack", "oliver")
         println(array2(1))
+    }
+
+    // 变长数组
+    def func2(): Unit = {
 
         // 创建一个变长数组
         var array3 = ArrayBuffer[Int]()
@@ -37,7 +51,34 @@ object ArrayTest {
 
         array3.remove(0, 1)
         array3.foreach(println)
+    }
 
+    // 数组求最大/最小值
+    def func3(): Unit = {
+        val array = Array(1, 2, 3, 4, 5, 6)
+        val sum = array.sum
+        val min = array.min
+        val max = array.max
+        println(s"sum: $sum, min: $min, max: $max")
+
+        val sortArray = array.sortWith(_ < _)
+        println(sortArray.mkString(", "))
+    }
+
+    // 创建二维数组
+    def func4(): Unit = {
+        val myMatrix = Array.ofDim[Int](3, 3)
+        for (i <- 0 to 2) {
+            for (j <- 0 to 2) {
+                myMatrix(i)(j) = j
+            }
+        }
+        for (i <- 0 to 2) {
+            for (j <- 0 to 2) {
+                print(" " + myMatrix(i)(j))
+            }
+            println()
+        }
     }
 
 }
