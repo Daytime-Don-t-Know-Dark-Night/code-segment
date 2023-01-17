@@ -17,13 +17,13 @@ object WordCount {
         func1()
     }
 
-    // 监听端口, 单词计数, nc -lp 9999
+    // 监听端口, 单词计数
     def func1(): Unit = {
         // 创建环境对象, 采集周期3秒
         val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
         val sc = new StreamingContext(sparkConf, Seconds(3))
 
-        // 获取端口数据, 这里使用netcat工具发送消息
+        // 获取端口数据, 这里使用netcat工具发送消息, nc -lp 9999
         val lines: ReceiverInputDStream[String] = sc.socketTextStream("localhost", 9999)
 
         // 通过空格符将消息转成DStream
@@ -35,10 +35,8 @@ object WordCount {
         // 不能关闭环境对象, 保持长期执行
         // sc.stop()
 
-        // 启动采集器
+        // 启动采集器, 等待采集器关闭
         sc.start()
-
-        // 等待采集器关闭
         sc.awaitTermination()
     }
 
