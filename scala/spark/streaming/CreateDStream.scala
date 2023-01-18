@@ -1,9 +1,11 @@
 package spark.streaming
 
+import org.apache.kafka.clients.consumer.{ConsumerConfig, ConsumerRecord}
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.streaming.dstream.ReceiverInputDStream
+import org.apache.spark.streaming.dstream.{InputDStream, ReceiverInputDStream}
+import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 import org.apache.spark.streaming.receiver.Receiver
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
@@ -20,6 +22,8 @@ object CreateDStream {
 
     // https://www.bilibili.com/video/BV11A411L7CK?p=189&vd_source=e839d03e8fb3384d0ed571c1ffd80e49
 
+    val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
+
     def main(args: Array[String]): Unit = {
         func2()
     }
@@ -28,7 +32,6 @@ object CreateDStream {
 
     def func1(): Unit = {
         // 创建环境对象, 采集周期3秒
-        val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
         val sc = new StreamingContext(sparkConf, Seconds(3))
 
         val rddQueue = new mutable.Queue[RDD[Int]]()
@@ -53,7 +56,6 @@ object CreateDStream {
 
     def func2(): Unit = {
 
-        val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
         val sc = new StreamingContext(sparkConf, Seconds(3))
 
         val messageDS: ReceiverInputDStream[String] = sc.receiverStream(new MyReceiver())
@@ -86,7 +88,31 @@ object CreateDStream {
 
     }
 
+    /** kafka ******************************************************************************************************* */
+
+    def func3(): Unit = {
+
+        val sc = new StreamingContext(sparkConf, Seconds(3))
+        val kafkaProp: Map[String, Object] = Map[String, Object](
+            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> "linux1:9091,linux2:9092",
+            ConsumerConfig.GROUP_ID_CONFIG -> "",
+            "key.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer",
+            "value.deserializer" -> "org.apache.kafka.common.serialization.StringDeserializer"
+        )
+
+        val kafkaDataDs: InputDStream[ConsumerRecord[String, String]] = KafkaUtils.createDirectStream[String, String](
+            sc,
+            LocationStrategies.PreferConsistent,
+            ConsumerStrategies.Subscribe[String, String](Set(""), kafkaProp)
+        )
+        kafkaDataDs.map(_.value()).print()
+
+        sc.start()
+        sc.awaitTermination()
+
+    }
 
     /** ************************************************************************************************************* */
+
 
 }
