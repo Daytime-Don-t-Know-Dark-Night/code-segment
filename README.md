@@ -59,6 +59,7 @@
     - [数组](./scala/basic/ArrayTest.scala)
     - [循环](./scala/basic/Circulation.scala)
     - [隐式转换](./scala/basic/Implicit.scala)
+    - [Map及其操作](./scala/basic/MapTest.scala)
     - [字符串相关](./scala/basic/StringTest.scala)
 - [日期](./scala/datetime)
     - [时间循环](./scala/datetime/TimeCycle.scala)
