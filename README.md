@@ -78,6 +78,7 @@
 - [spark-streaming](./scala/spark/streaming)
     - [单词计数](./scala/spark/streaming/WordCount.scala)
     - [创建DStream](./scala/spark/streaming/CreateDStream.scala)
+    - [DStream状态操作](./scala/spark/streaming/DStreamStatus.scala)
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
 
