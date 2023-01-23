@@ -1,7 +1,7 @@
 package spark.streaming
 
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
+import org.apache.spark.streaming.dstream.ReceiverInputDStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /**
@@ -11,17 +11,17 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
  */
 object DStreamStatus {
 
+    // nc -lp 9999
+    val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
+    val sc = new StreamingContext(sparkConf, Seconds(3))
+    val datas: ReceiverInputDStream[String] = sc.socketTextStream("localhost", 9999)
+
     def main(args: Array[String]): Unit = {
         func2()
     }
 
     def func1(): Unit = {
 
-        val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
-        val sc = new StreamingContext(sparkConf, Seconds(3))
-
-        // nc -lp 9999
-        val datas = sc.socketTextStream("localhost", 9999)
         // 无状态数据操作, 只对当前的采集周期内的数据进行处理, 例如输入12个a, 会分一次或多次分别统计 (a, 5) (a, 7)
         val wordToOne = datas.map((_, 1))
         val wordToCount = wordToOne.reduceByKey(_ + _)
@@ -34,12 +34,7 @@ object DStreamStatus {
     def func2(): Unit = {
 
         // 在使用有状态操作时, 需要设定检查点目录
-        val sparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkStreaming")
-        val sc = new StreamingContext(sparkConf, Seconds(3))
         sc.checkpoint("checkpoint")
-
-        // nc -lp 9999
-        val datas = sc.socketTextStream("localhost", 9999)
         val wordToOne = datas.map((_, 1))
 
         // updateStateByKey(): 根据key对数据的状态进行更新
@@ -52,4 +47,5 @@ object DStreamStatus {
         sc.start()
         sc.awaitTermination()
     }
+
 }
