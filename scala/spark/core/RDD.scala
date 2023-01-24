@@ -1,13 +1,34 @@
 package spark.core
 
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Dataset, Row, RowFactory, SparkSession}
+import org.apache.spark.sql.types.StructType
 import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.collection.JavaConversions
 
 /**
  * @Author dingc
  * @Date 2022/1/3 21:26
  */
 object RDD {
+
+    def getDs: Dataset[Row] = {
+
+        val spark = SparkSession.builder().master("local[*]").getOrCreate()
+        val schema = new StructType()
+            .add("id", "string")
+            .add("name", "string")
+            .add("age", "string")
+
+        val rows = Array(
+            RowFactory.create("001", "dingc", "20"),
+            RowFactory.create("002", "boluo", "30"),
+            RowFactory.create("003", "qidai", "40")
+        )
+
+        spark.createDataFrame(JavaConversions.seqAsJavaList(rows), schema)
+    }
 
     // 从集合中创建RDD
     def makeFunc1(sparkContext: SparkContext): Unit = {
