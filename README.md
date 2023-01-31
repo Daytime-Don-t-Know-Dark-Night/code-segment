@@ -57,7 +57,7 @@
 
 - [基础组件](./scala/basic)
     - [数组](./scala/basic/ArrayTest.scala)
-    - [循环](./scala/basic/Circulation.scala)
+    - [循环相关](./scala/basic/Circulation.scala)
     - [隐式转换](./scala/basic/Implicit.scala)
     - [Map及其操作](./scala/basic/MapTest.scala)
     - [字符串相关](./scala/basic/StringTest.scala)
@@ -65,6 +65,8 @@
     - [时间循环](./scala/datetime/TimeCycle.scala)
 - [io流](./scala/io)
 - [正则表达式](./scala/pattern)
+    - [正则分组](./scala/pattern/GroupReplace.scala)
+    - [字符串切割保留切割符](./scala/pattern/SplitSQL.scala)
 - [spark-core](./scala/spark/core)
     - [输入](./scala/spark/core/Input.scala)
     - [输出](./scala/spark/core/Output.scala)
