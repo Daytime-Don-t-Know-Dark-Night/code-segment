@@ -12,7 +12,7 @@ object MapTest {
     // https://nummy-demo.readthedocs.io/zh_CN/latest/chapter/chapter05.html#id1
 
     def main(args: Array[String]): Unit = {
-        func3()
+        func4()
     }
 
     // 不可变映射(Map)
@@ -54,9 +54,16 @@ object MapTest {
         }
     }
 
-    //
+    // List 转 Map
     def func4(): Unit = {
-
+        val list1 = List("ta", "tb", "tc", "td", "te", "tf", "tg")
+        var idx = 1
+        val map: mutable.LinkedHashMap[String, Int] = mutable.LinkedHashMap.empty
+        list1.foreach(i => {
+            map.put(i, idx)
+            idx = idx + 1
+        })
+        println(map)
     }
 
 }
