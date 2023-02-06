@@ -11,6 +11,10 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 object WordCount {
 
     def main(args: Array[String]): Unit = {
+        func1()
+    }
+
+    def func1(): Unit = {
 
         val spark = SparkSession
             .builder()
@@ -54,4 +58,5 @@ object WordCount {
         // +-----+-----+
 
     }
+
 }
