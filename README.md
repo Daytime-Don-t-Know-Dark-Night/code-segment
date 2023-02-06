@@ -85,6 +85,8 @@
     - [关闭DStream](./scala/spark/streaming/StopDStream.scala)
     - [DStream有状态操作](./scala/spark/streaming/DStreamStatus.scala)
     - [DStream无状态操作](./scala/spark/streaming/DStreamNoStatus.scala)
+- [structured-streaming](./scala/spark/structured/streaming)
+    - [单词计数](./scala/spark/structured/streaming/WordCount.scala)
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
 
