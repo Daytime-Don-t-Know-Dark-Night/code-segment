@@ -87,6 +87,7 @@
     - [DStream无状态操作](./scala/spark/streaming/DStreamNoStatus.scala)
 - [structured-streaming](./scala/spark/structured/streaming)
     - [单词计数](./scala/spark/structured/streaming/WordCount.scala)
+    - [StructuredStreaming消费kafka数据](./scala/spark/structured/streaming/ConsumerKafka.scala)
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
 
