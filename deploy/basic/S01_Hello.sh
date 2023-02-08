@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "hello world!!"
 
 # 执行方式1: sh S01_Hello.sh
