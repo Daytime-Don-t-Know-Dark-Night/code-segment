@@ -1,5 +1,7 @@
 .idea
-checkpoint
 target
 
 *.iml
+
+checkpoint
+ds_checkpoint
