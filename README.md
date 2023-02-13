@@ -52,6 +52,8 @@
 - [线程](./java/thread)
     - [死锁](./java/thread/DeadLock.java)
 - [事务](./java/transaction)
+- [特殊问题](./java/item)
+    - [按顺序返回字符串可被切分的所有情况](./java/item/StringSplitter.java)
 
 ## scala
 
@@ -90,5 +92,7 @@
     - [StructuredStreaming消费kafka数据](./scala/spark/structured/streaming/ConsumerKafka.scala)
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
+- [特殊问题](./scala/item)
+    - [检查ORD中特殊字段是否处理](./scala/item/CheckTypeHandling.scala)
 
 
