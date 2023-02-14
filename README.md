@@ -55,6 +55,7 @@
 - [特殊问题](./java/item)
     - [按顺序返回字符串可被切分的所有情况](./java/item/StringSplitter.java)
     - [分隔SQL中多余的括号](./java/item/SeparateParentheses.java)
+    - [比较两个Json是否相同](./java/item/CompareJsonNode.java)
 
 ## scala
 
@@ -95,6 +96,6 @@
 - [xml](./scala/xml)
 - [特殊问题](./scala/item)
     - [检查ORD中特殊字段是否处理](./scala/item/CheckTypeHandling.scala)
-    - [检查两个Map是否相等](./scala/item/CheckMap.scala)
+    - [检查两个Map是否相等](./scala/item/CompareMap.scala)
 
 

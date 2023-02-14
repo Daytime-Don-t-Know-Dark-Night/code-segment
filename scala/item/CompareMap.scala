@@ -5,7 +5,7 @@ package item
  * @date 2023/2/14 21:35
  * @desc
  */
-object CheckMap {
+object CompareMap {
 
     def main(args: Array[String]): Unit = {
         val map1 = Map("a" -> "1", "b" -> "2", "c" -> "3")
@@ -19,7 +19,6 @@ object CheckMap {
             null
         } else {
             val keys = map1.keySet ++ map2.keySet
-            List("a").foldLeft()
             keys.foldLeft(Map[String, (Option[String], Option[String])]()) { (diff, key) =>
                 (map1.get(key), map2.get(key)) match {
                     case (Some(value1), Some(value2)) if value1 != value2 => diff + (key -> (Some(value1), Some(value2)))
