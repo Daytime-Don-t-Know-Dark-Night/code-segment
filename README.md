@@ -95,5 +95,6 @@
 - [xml](./scala/xml)
 - [特殊问题](./scala/item)
     - [检查ORD中特殊字段是否处理](./scala/item/CheckTypeHandling.scala)
+    - [检查两个Map是否相等](./scala/item/CheckMap.scala)
 
 
