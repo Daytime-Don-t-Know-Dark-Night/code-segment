@@ -95,7 +95,7 @@
 - [SQL题](./scala/sql)
 - [xml](./scala/xml)
 - [特殊问题](./scala/item)
-    - [检查ORD中特殊字段是否处理](./scala/item/CheckTypeHandling.scala)
     - [比较两个Map是否相等](./scala/item/CompareMap.scala)
+    - [SQL转Dataset算子](./scala/item/SqlToDataset.scala)
 
 
