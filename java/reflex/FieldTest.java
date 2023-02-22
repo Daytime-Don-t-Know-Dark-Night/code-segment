@@ -9,6 +9,8 @@ import java.lang.reflect.Field;
  */
 public class FieldTest {
 
+    // https://blog.csdn.net/m0_72041293/article/details/128050383#
+
     // 反射的功能:
     // 1. 在运行的时候判断任意一个对象所属的类
     // 2. 在运行时构造任意一个类的对象
