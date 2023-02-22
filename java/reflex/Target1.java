@@ -2,20 +2,44 @@ package reflex;
 
 public class Target1 {
 
-	public int func11() {
-		return 0;
-	}
+    public String userId;
 
-	public void func12() {
-		System.out.println("1-2");
-	}
+    public String name;
 
-	public String func13(String params) {
-		return params + ": invoke";
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public String func14(String... params) {
-		return params[0];
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * *****************************************************************************************************************
+     */
+
+    public int func11() {
+        return 0;
+    }
+
+    public void func12() {
+        System.out.println("1-2");
+    }
+
+    public String func13(String params) {
+        return params + ": invoke";
+    }
+
+    public String func14(String... params) {
+        return params[0];
+    }
 
 }

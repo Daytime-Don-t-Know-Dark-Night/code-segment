@@ -37,6 +37,7 @@
 - [队列](./java/queue)
     - [Kafka](./java/queue/kafka)
 - [反射](./java/reflex)
+    - [反射获取对象中的属性](./java/reflex/FieldTest.java)
 - [Spark](./java/spark)
     - [缓存](./java/spark/CacheTest.java)
     - [连接HDFS](./java/spark/ConnectHDFS.java)
