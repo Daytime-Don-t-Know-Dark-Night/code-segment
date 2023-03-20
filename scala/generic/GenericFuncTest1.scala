@@ -5,7 +5,7 @@ package generic
  * @date 2023/2/24 23:27
  * @desc
  */
-object GenericFuncTest {
+object GenericFuncTest1 {
 
     // https://blog.csdn.net/qq_45765882/article/details/104335833
 
