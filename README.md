@@ -58,6 +58,7 @@
     - [分隔SQL中多余的括号](./java/item/SeparateParentheses.java)
     - [比较两个Json是否相同](./java/item/CompareJsonNode.java)
 
+
 ## scala
 
 - [基础组件](./scala/basic)
@@ -101,3 +102,7 @@
     - [SQL转Dataset算子](./scala/item/SqlToDataset.scala)
 
 
+## python
+
+- [小项目](./python/demo)
+    - [获取NBA球员信息](./python/demo/01_nba.py)
