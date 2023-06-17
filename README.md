@@ -32,6 +32,8 @@
     - [加载json文件](./java/jackson/LoadJson.java)
     - [node转DataSet](./java/jackson/NodeToDataSet.java)
 - [jdbc](./java/jdbc)
+- [kafka](./java/kafka)
+    - [基础消费](./java/kafka/basic)
 - [Optional](./java/optional)
 - [正则表达式](./java/pattern)
 - [队列](./java/queue)
@@ -57,7 +59,6 @@
     - [按顺序返回字符串可被切分的所有情况](./java/item/StringSplitter.java)
     - [分隔SQL中多余的括号](./java/item/SeparateParentheses.java)
     - [比较两个Json是否相同](./java/item/CompareJsonNode.java)
-
 
 ## scala
 
@@ -100,7 +101,6 @@
 - [特殊问题](./scala/item)
     - [比较两个Map是否相等](./scala/item/CompareMap.scala)
     - [SQL转Dataset算子](./scala/item/SqlToDataset.scala)
-
 
 ## python
 
