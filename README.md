@@ -34,6 +34,7 @@
 - [jdbc](./java/jdbc)
 - [kafka](./java/kafka)
     - [基础消费](./java/kafka/basic)
+    - [异步发送消息](./java/kafka/asyn)
 - [Optional](./java/optional)
 - [正则表达式](./java/pattern)
 - [队列](./java/queue)

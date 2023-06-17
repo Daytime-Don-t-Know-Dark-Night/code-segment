@@ -20,7 +20,8 @@ public class KafkaConsumerTest {
         props.put("key.deserializer", StringDeserializer.class);
         props.put("value.deserializer", StringDeserializer.class);
 
-        String topic = "test";
+        // String topic = "test";
+        String topic = "asyn-test";
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "testGroupId");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
 
