@@ -14,6 +14,7 @@ import java.util.Properties;
  */
 public class KafkaAsynProducerTest {
 
+    // https://blog.csdn.net/u011294519/article/details/104723784
     private static KafkaProducer<String, String> producer = null;
 
     public static void main(String[] args) {
