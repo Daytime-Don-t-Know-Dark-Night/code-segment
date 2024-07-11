@@ -29,6 +29,8 @@ import static org.apache.spark.sql.functions.*;
  */
 public class Demo05_UDAF {
 
+    // https://www.cnblogs.com/liuyechang/p/17002996.html
+
     public static void main(String[] args) {
 
         SparkSession spark = SparkSession.builder().master("local[*]").getOrCreate();
