@@ -24,7 +24,7 @@ public class Demo04_Window {
         StructType scheme = new StructType()
                 .add("id", "int")
                 .add("name", "string")
-                .add("java8/date", "java8/date")
+                .add("date", "date")
                 .add("score", "int");
 
         Row row1 = RowFactory.create(1, "dingc", LocalDate.of(2024, 7, 1), 75);
