@@ -1,4 +1,4 @@
-package java8.spark;
+package java8.spark.core;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

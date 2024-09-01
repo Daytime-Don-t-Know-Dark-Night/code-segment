@@ -1,4 +1,4 @@
-package java8.spark.sharing;
+package java8.spark.core;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;

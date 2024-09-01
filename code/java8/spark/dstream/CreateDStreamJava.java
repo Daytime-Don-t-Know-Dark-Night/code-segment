@@ -1,4 +1,4 @@
-package java8.spark.streaming;
+package java8.spark.dstream;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function2;

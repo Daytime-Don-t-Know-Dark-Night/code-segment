@@ -1,4 +1,4 @@
-package java8.spark.sharing;
+package java8.spark.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

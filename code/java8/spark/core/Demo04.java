@@ -1,4 +1,4 @@
-package java8.spark.sharing;
+package java8.spark.core;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -16,7 +16,7 @@ import static org.apache.spark.sql.functions.*;
  * @datetime 2024-06-23 20:11
  * @description
  */
-public class Demo01 {
+public class Demo04 {
 
     private static Dataset<Row> ds;
 

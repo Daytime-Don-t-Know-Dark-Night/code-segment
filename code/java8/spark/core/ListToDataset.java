@@ -1,4 +1,4 @@
-package java8.spark;
+package java8.spark.core;
 
 import com.google.common.collect.Lists;
 import org.apache.spark.sql.Dataset;

@@ -1,4 +1,4 @@
-package java8.spark.sharing;
+package java8.spark.sql;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.spark.sql.Dataset;

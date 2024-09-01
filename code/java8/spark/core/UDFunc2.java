@@ -1,4 +1,4 @@
-package java8.spark;
+package java8.spark.core;
 
 import com.clearspring.analytics.util.Lists;
 import com.fasterxml.jackson.databind.JsonNode;

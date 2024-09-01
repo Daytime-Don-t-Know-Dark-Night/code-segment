@@ -1,4 +1,4 @@
-package java8.spark;
+package java8.spark.core;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Uninterruptibles;
