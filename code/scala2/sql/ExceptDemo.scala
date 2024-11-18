@@ -87,6 +87,7 @@ object ExceptDemo {
             "full"
         )
         joinDs.show(false)
+        joinDs.withColumn("a", when(col("value1").isNotNull, col("value1")).otherwise(col("value2")))
         // 连接之后结果为:
         // +------+----+------+----+
         // |userId|name|userId|name|

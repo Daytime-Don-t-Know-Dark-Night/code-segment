@@ -34,7 +34,7 @@ public class Https {
                 .build();
     }
 
-    private static JsonNode postHttp(String url, JsonNode data) {
+    public static JsonNode postHttp(String url, JsonNode data) {
 
         RequestBuilder builder = RequestBuilder.post()
                 .setUri(url)

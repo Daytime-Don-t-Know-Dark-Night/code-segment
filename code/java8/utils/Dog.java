@@ -3,6 +3,7 @@ package java8.utils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * @author chao
