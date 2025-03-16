@@ -5,6 +5,8 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Anduin2017/HowToCook)](https://github.com/Anduin2017/HowToCook/graphs/contributors)
 [![npm](https://img.shields.io/npm/v/how-to-cook)](https://www.npmjs.com/package/how-to-cook)
 
+
+
 ## java
 
 - [算法](src/main/java/com/boluo/algorithm)
@@ -35,7 +37,9 @@
 - [kafka](src/main/java/com/boluo/kafka)
   - [基础消费](src/main/java/com/boluo/kafka/basic)
   - [异步发送消息](src/main/java/com/boluo/kafka/asyn)
-- [Optional](src/main/java/com/boluo/optional)
+- [Java判空](src/main/java/com/boluo/optional)
+  - [Optional](src/main/java/com/boluo/optional/OptionalTest.java)
+  - [判空通用工具类](src/main/java/com/boluo/optional/NullSafe.java)
 - [正则表达式](src/main/java/com/boluo/pattern)
 - [队列](src/main/java/com/boluo/queue)
   - [Kafka](src/main/java/com/boluo/queue/kafka)
@@ -62,3 +66,7 @@
   - [比较两个Json是否相同](src/main/java/com/boluo/item/CompareJsonNode.java)
 
 
+
+## python
+
+[code-segment-python](https://github.com/boluo1997/code-segement-py)
