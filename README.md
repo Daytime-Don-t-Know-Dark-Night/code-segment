@@ -69,4 +69,4 @@
 
 ## python
 
-[code-segment-python](https://github.com/boluo1997/code-segement-py)
+- [code-segment-python](https://github.com/boluo1997/code-segement-py)
