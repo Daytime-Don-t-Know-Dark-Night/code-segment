@@ -1,4 +1,4 @@
-package com.boluo.spark.structured;
+package com.boluo.kafka.basic;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -12,17 +12,13 @@ import java.util.stream.Collectors;
 
 /**
  * @author chao
- * @datetime 2025-01-22 21:29
+ * @datetime 2025-03-23 12:18
  * @description
  */
-public class SparkApplication {
-
-    public static void main(String[] args) {
-
-    }
+public class GetKafkaInfo {
 
 
-    static void getPartitionsForTopic(String topicName, Properties properties) {
+    public static void getPartitionsForTopic(String topicName, Properties properties) {
         Consumer<Long, String> consumer = new KafkaConsumer<>(properties);
 
         // 获取主题的分区信息
@@ -48,6 +44,5 @@ public class SparkApplication {
         }
         consumer.close();
     }
-
 
 }
