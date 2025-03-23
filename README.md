@@ -63,9 +63,8 @@
   - [数据倾斜](src/main/java/com/boluo/spark/DataSkew.java)
   - [List转DataSet](src/main/java/com/boluo/spark/ListToDataset.java)
   - [Stage划分](src/main/java/com/boluo/spark/StageTest.java)
-  - [UDAF](src/main/java/com/boluo/spark/UDAFunc.java)
   - [UDF](src/main/java/com/boluo/spark/UDFunc.java)
-
+  - [UDAF](src/main/java/com/boluo/spark/UDAFunc.java)
 
 ## Kafka
 - [kafka](src/main/java/com/boluo/kafka)
