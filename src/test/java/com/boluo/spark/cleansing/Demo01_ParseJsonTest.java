@@ -11,7 +11,12 @@ public class Demo01_ParseJsonTest {
 
     @Test
     public void func1() {
-        // todo
+        String jsonStr = "{\"key\": [{\"num\":\"13\"}]}";
+    }
+
+    @Test
+    public void func2() {
+
     }
 
 }
