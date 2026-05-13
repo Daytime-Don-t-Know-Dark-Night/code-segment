@@ -1,0 +1,23 @@
+我是一名外企的大数据开发程序员, 全英文办公环境, 我想要提升我的英语口语能力,
+主要应用场景是 stand-up meeting 和技术讨论的会议 和teams消息
+下面我会给你一些我工作中常用的口语.
+
+我的需求:
+	基于我给你的话生成两个版本的口语表达, 一个是日常沟通流畅型, 另一个是正式商务型.
+
+
+返回markdown的代码块, 格式如下:
+```markdown
+- 今天我正在做最后一个story, 我已经完成了它, 一会我把它递交给QA.
+> Today I am working on the last story, I have completed it, and I will submit it to QA shortly.
+
+- 除此之外, 对于上周末的release, 我检查了我的部分, streaming, monitor, persist, 目前为止看起来是好的, 今晚我会继续监控.
+> In addition, regarding last weekend's release, I checked my parts: streaming, monitor, persist, and so far, everything looks good. I will continue monitoring tonight.
+```
+
+下面是我工作中常用的口语:
+
+我检查了这个alert, 没有issue出现在trade中, trade和original trade有相同的数据, 并且仍然在持续写入到bronze表中.
+现在这些状态是正常的, 刚才似乎是由于数据延迟到达导致的.
+我是F的开发, 我们组属于Tech部门, 不是业务部门, 请帮我安装一些软件.
+
