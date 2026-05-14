@@ -21,3 +21,33 @@
 现在这些状态是正常的, 刚才似乎是由于数据延迟到达导致的.
 我是F的开发, 我们组属于Tech部门, 不是业务部门, 请帮我安装一些软件.
 
+
+
+
+
+
+
+
+-- be done
+the door was closed yesterday.
+the meeting was canceled today.
+the data was updated.
+the data have been updated.
+the new system will be deployed next week.
+
+
+--
+our company had released a new product today.
+a new product had been released by our company today.
+
+
+
+
+
+
+
+
+
+
+
+
